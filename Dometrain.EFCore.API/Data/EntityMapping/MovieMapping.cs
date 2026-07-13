@@ -20,9 +20,16 @@ namespace Dometrain.EFCore.API.Data.EntityMapping
 
             builder.Property(movie => movie.ReleaseDate)
                 .HasColumnType("date");
+                //.HasColumnType("char(23)").HasConversion<string>(); 
+                //így string lesz belőle ms-el és kell validátor
 
             builder.Property(movie => movie.Synopsis)
                 .HasColumnType("varchar(max)");
+
+            //az AgeRating-et átalakítjuk string értékké
+            builder.Property(movie => movie.AgeRating)
+                .HasColumnType("varchar(32)")
+                .HasConversion<string>();
 
             /*
             //itt is be lehet állítani a kapcsolatokat
@@ -44,7 +51,8 @@ namespace Dometrain.EFCore.API.Data.EntityMapping
                 Title = "Fight Club",
                 ReleaseDate = new DateTime(1999, 9, 10),
                 Synopsis = "They are one person...",
-                GenreId = 1
+                GenreId = 1,
+                AgeRating = AgeRating.Adolescent
             });
         }
 
