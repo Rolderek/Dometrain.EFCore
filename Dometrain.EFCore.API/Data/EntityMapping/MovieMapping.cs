@@ -22,8 +22,30 @@ namespace Dometrain.EFCore.API.Data.EntityMapping
                 .HasColumnType("date");
 
             builder.Property(movie => movie.Synopsis)
-                .HasColumnType("varchar(max)")
-                .HasColumnName("Plot");
+                .HasColumnType("varchar(max)");
+
+            /*
+            //itt is be lehet állítani a kapcsolatokat
+            builder
+                .HasOne(movie => movie.Genre)
+                .WithMany(genre => genre.Movies) //itt üresen is hagyhatjuk a zárójelet ha egyértelmű a kapcsolat
+                .HasPrincipalKey(genre => genre.Id)
+                .HasForeignKey(movie => movie.GenreId);
+            */
+            builder
+                .HasOne(movie => movie.Genre)
+                .WithMany(genre => genre.Movies)
+                .HasForeignKey(movie => movie.GenreId);
+
+            //data seed:
+            builder.HasData(new Movie
+            {
+                Id = 1,
+                Title = "Fight Club",
+                ReleaseDate = new DateTime(1999, 9, 10),
+                Synopsis = "They are one person...",
+                GenreId = 1
+            });
         }
 
         

@@ -17,8 +17,8 @@ var app = builder.Build();
 //ezt ne csináljuk, de azért megmutatta:
 var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<MoviesContext>();
-context.Database.EnsureDeleted(); 
-context.Database.EnsureCreated(); 
+//context.Database.EnsureDeleted(); 
+//context.Database.EnsureCreated(); 
 //eldobja a teljes táblát és újra csinálja
 
 

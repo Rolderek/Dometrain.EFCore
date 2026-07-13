@@ -23,7 +23,7 @@ public class MoviesController : Controller
     [ProducesResponseType(typeof(List<Movie>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll()
     {
-        return Ok(await _context.Movies.ToListAsync()); //módosítva
+        return Ok(await _context.Movies.Include(g => g.Genre).ToListAsync()); //módosítva
     }
 
     [HttpGet("{id:int}")]
@@ -31,7 +31,9 @@ public class MoviesController : Controller
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Get([FromRoute] int id)
     {
-        var movie = await _context.Movies.FirstOrDefaultAsync(x => x.Id == id);
+        var movie = await _context.Movies
+            .Include(movie => movie.Genre)
+            .FirstOrDefaultAsync(x => x.Id == id);
         //a felsőbe mehet lambda nyugodtan
 
         //mi van ha több találat is van:

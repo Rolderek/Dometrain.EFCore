@@ -11,6 +11,11 @@ public class Movie
     public string? Title { get; set; } 
     public DateTime ReleaseDate { get; set; }
     public string? Synopsis { get; set; }
+
+    //kapcsolat:
+    public Genre? Genre { get; set; }
+    public int GenreId { get; set; } //az EF tudja hogy ez a kettő összetartozik
+    //public int MainGenreId { get; set; } //így már nem tudja összekötni, a név miatt
 }
 
 public class MovieTitle
