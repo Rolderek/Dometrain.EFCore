@@ -31,6 +31,16 @@ namespace Dometrain.EFCore.API.Data.EntityMapping
                 .HasColumnType("varchar(32)")
                 .HasConversion<string>();
 
+            //két adattag egyben megjelnítve: (first és last name)
+            //builder.ComplexProperty(movie => movie.Director);
+            //builder.OwnsOne(movie => movie.Director); //ezt lehet egyéni entitásként kezelni:
+            builder.OwnsOne(movie => movie.Director)
+                .ToTable("Movie_Directors");
+
+            //most az Actors adattagot:
+            builder.OwnsMany(movie => movie.Actors)
+                .ToTable("Movie_Actors");
+
             /*
             //itt is be lehet állítani a kapcsolatokat
             builder
@@ -54,6 +64,17 @@ namespace Dometrain.EFCore.API.Data.EntityMapping
                 GenreId = 1,
                 AgeRating = AgeRating.Adolescent
             });
+
+            //saját típus
+            builder.OwnsOne(movie => movie.Director)
+                .HasData(new { MovieId = 1, FirstName = "David", LastName = "Fincher" });
+
+            //itt már kell az ID is
+            builder.OwnsMany(movie => movie.Actors)
+                .HasData(new { MovieId = 1, Id = 1, FirstName = "Edward", LastName = "Norton" },
+                        new { MovieId = 1, Id = 2, FirstName = "Brad", LastName = "Pitt" });
+
+
         }
 
         
