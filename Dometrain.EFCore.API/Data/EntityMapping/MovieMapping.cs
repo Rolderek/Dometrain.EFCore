@@ -1,4 +1,5 @@
 ﻿using Dometrain.EFCore.API.Models;
+using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Reflection.Emit;
@@ -63,6 +64,15 @@ namespace Dometrain.EFCore.API.Data.EntityMapping
                 Synopsis = "They are one person...",
                 GenreId = 1,
                 AgeRating = AgeRating.Adolescent
+            },
+            new Movie
+            {
+                Id = 2,
+                Title = "Star Wars",
+                ReleaseDate = new DateTime(1977,08,12),
+                Synopsis ="Awsome!",
+                GenreId = 3,
+                AgeRating = AgeRating.HighScool
             });
 
             //saját típus
@@ -71,8 +81,11 @@ namespace Dometrain.EFCore.API.Data.EntityMapping
 
             //itt már kell az ID is
             builder.OwnsMany(movie => movie.Actors)
-                .HasData(new { MovieId = 1, Id = 1, FirstName = "Edward", LastName = "Norton" },
-                        new { MovieId = 1, Id = 2, FirstName = "Brad", LastName = "Pitt" });
+                .HasData(
+                    new { MovieId = 1, Id = 1, FirstName = "Edward", LastName = "Norton" },
+                    new { MovieId = 1, Id = 2, FirstName = "Brad", LastName = "Pitt" },
+                    new { MovieId = 2, Id =1, FirstName = "Mark", LastName = "Hamil"},
+                    new { MovieId = 2, Id =2, FirstName = "Harison", LastName = "Ford"});
 
 
         }
