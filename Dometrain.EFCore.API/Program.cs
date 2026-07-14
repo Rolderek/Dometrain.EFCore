@@ -25,8 +25,8 @@ var app = builder.Build();
 //ezt ne csináljuk, de azért megmutatta:
 var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<MoviesContext>();
-context.Database.EnsureDeleted(); 
-context.Database.EnsureCreated(); 
+//context.Database.EnsureDeleted(); 
+//context.Database.EnsureCreated(); 
 //eldobja a teljes táblát és újra csinálja
 
 
@@ -45,3 +45,10 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+/*
+ * kell a migrációhoz a efcore.tool, efcore.design a 9.0.17 verziótól
+ * dotnet-ef migrations add "neve" migráció hozzáadása/elkezdése
+ * dotnet-ef database update - adatbázis update legfrisebb migration verzióra, mugé lehet írni a pontos migráció nevét és akkor arra áll vissza
+*/

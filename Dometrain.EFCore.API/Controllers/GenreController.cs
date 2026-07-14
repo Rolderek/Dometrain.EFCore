@@ -37,7 +37,7 @@ namespace Dometrain.EFCore.API.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(Genre), StatusCodes.Status201Created)]
-        public async Task<IActionResult> Create([FromRoute] Genre genre)
+        public async Task<IActionResult> Create([FromBody] Genre genre)
         {
             await _context.Genres.AddAsync(genre);
             await _context.SaveChangesAsync();
