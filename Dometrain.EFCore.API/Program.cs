@@ -29,7 +29,16 @@ var context = scope.ServiceProvider.GetRequiredService<MoviesContext>();
 //context.Database.EnsureDeleted(); 
 //context.Database.EnsureCreated(); 
 //eldobja a teljes táblát és újra csinálja, de ezek helyett lehet migrálni is:
-//await context.Database.MigrateAsync();
+//await context.Database.MigrateAsync(); //ez nem felel meg a security előírásoknak itt hazsnálva
+/*
+//nem indítjuk el ha nema legújabb migration-on van a program:
+var pendingMigration = await context.Database.GetPendingMigrationsAsync();
+if (pendingMigration.Count() > 0)
+{
+    throw new Exception("Database is not fully migrated.");
+}
+*/
+
 
 
 
@@ -53,4 +62,10 @@ app.Run();
  * kell a migrációhoz a efcore.tool, efcore.design a 9.0.17 verziótól
  * dotnet-ef migrations add "neve" migráció hozzáadása/elkezdése
  * dotnet-ef database update - adatbázis update legfrisebb migration verzióra, mugé lehet írni a pontos migráció nevét és akkor arra áll vissza
+ * dotnet-ef migrations script > script.txt //migrációk file-ba írása
+ * dotnet-ef migrations script Migration2 > script2.txt //egy adott migráció file-ba írása
+ * dotnet-ef migrations bundle  //envirorment felépítése Don't forget to copy appsettings.json alongside your bundle if you need it to apply migrations.
+ * az előző sok készít egy efbundle.exe file-t 
+ * ./efbundle --help //system artifact!
+ * 
 */
