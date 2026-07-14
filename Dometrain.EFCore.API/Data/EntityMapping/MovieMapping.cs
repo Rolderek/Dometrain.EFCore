@@ -10,8 +10,11 @@ namespace Dometrain.EFCore.API.Data.EntityMapping
     {
         public void Configure(EntityTypeBuilder<Movie> builder)
         {
+            //HasQuery filter - amikor bizonyos adatokat nem kell megjelenítened
             builder
                 .ToTable("Pictures")
+                .HasQueryFilter(movie => movie.ReleaseDate >= new DateTime(1900,1,1)) 
+                //itt ez lehetne egy kívülről beállítható változó is, de most beégetett érték 
                 .HasKey(movie => movie.Id);
 
             builder.Property(movie => movie.Title)
