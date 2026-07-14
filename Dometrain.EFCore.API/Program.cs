@@ -78,11 +78,13 @@ app.Run();
  * --előnyök--
  * test DB - ugyan az a technológia, nem kell semmi más neki csak egy DB-t cserélni, sok tesztnél érdemes ezt választani
  * memory DB - gyorsabb, mivel a memóriában van, 
+ * Repository - gyors, shielded the ORM from domain
  * 
  * 
  * --hátrányok--
  * test DB mindent teszteléni túl sok is lehet, (integrationTest > unitTest), ha változás történik az adatokat újra elő kell állítani a megfelelő formában, tesztek összeférhetetlensége, 
  * memory DB - Missing features, a DB motor miatt, Incompatible data types, Raw SQL nem 100%-ban kompatibilisek egymással (InMemoryDb < SQLite)
+ * repository - shielded the ORM from domain ez rossz is plusz interface kell mindenhez ami az ORM-ben van kell plusz osztály +kód
  * 
  * 
  * --teszthez--
@@ -90,6 +92,8 @@ app.Run();
  * efcore.Sqlite nugets
  * MemoryDatabase/SqlLiteTest.cs hazsnálata
  * új solution a project-en belül, valami nem jó a mappában
+ * 
+ * --Repository Test--
  * 
  * 
 */ 

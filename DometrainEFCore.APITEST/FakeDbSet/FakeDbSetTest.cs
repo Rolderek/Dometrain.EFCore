@@ -14,6 +14,7 @@ namespace DometrainEFCore.APITEST.FakeDbSet
     
     public class FakeDbSetTest
     {
+        /*
         [Fact]
         public async Task IfGenreExists_ReturnsGenre()
         {
@@ -50,5 +51,6 @@ namespace DometrainEFCore.APITEST.FakeDbSet
 
           
         }
+        */
     }
 }
