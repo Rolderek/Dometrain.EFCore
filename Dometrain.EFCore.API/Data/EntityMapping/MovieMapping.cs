@@ -58,7 +58,8 @@ namespace Dometrain.EFCore.API.Data.EntityMapping
                 .WithMany(genre => genre.Movies)
                 .HasForeignKey(movie => movie.GenreId);
 
-            //data seed:
+            //data seed: már nem kell a migráció miatt
+            /*
             builder.HasData(new Movie
             {
                 Id = 1,
@@ -91,7 +92,7 @@ namespace Dometrain.EFCore.API.Data.EntityMapping
                     new { MovieId = 1, Id = 2, FirstName = "Brad", LastName = "Pitt" },
                     new { MovieId = 2, Id = 1, FirstName = "Mark", LastName = "Hamil" },
                     new { MovieId = 2, Id = 2, FirstName = "Harison", LastName = "Ford" });
-
+            */
             
 
         }

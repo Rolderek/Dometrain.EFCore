@@ -30,6 +30,8 @@ namespace Dometrain.EFCore.API.Data.EntityMapping
                    .HasMaxLength(100)
                    .IsRequired();
 
+            //migráció miatt inaktív
+            /*
             builder.HasData(
                 new Genre
                 {
@@ -57,6 +59,7 @@ namespace Dometrain.EFCore.API.Data.EntityMapping
                     Name = "Horror"
                 }
             );
+            */
         }
 
     }
