@@ -71,22 +71,25 @@ namespace Dometrain.EFCore.API.Data.EntityMapping
                 Title = "Star Wars",
                 ReleaseDate = new DateTime(1977,08,12),
                 Synopsis ="Awsome!",
-                GenreId = 3,
+                GenreId = 4,
                 AgeRating = AgeRating.HighScool
             });
 
             //saját típus
             builder.OwnsOne(movie => movie.Director)
-                .HasData(new { MovieId = 1, FirstName = "David", LastName = "Fincher" });
+                .HasData(
+                    new { MovieId = 1, FirstName = "David", LastName = "Fincher" },
+                    new { MovieId = 2, FirstName = "George", LastName = "Lucas" });
 
             //itt már kell az ID is
             builder.OwnsMany(movie => movie.Actors)
                 .HasData(
                     new { MovieId = 1, Id = 1, FirstName = "Edward", LastName = "Norton" },
                     new { MovieId = 1, Id = 2, FirstName = "Brad", LastName = "Pitt" },
-                    new { MovieId = 2, Id =1, FirstName = "Mark", LastName = "Hamil"},
-                    new { MovieId = 2, Id =2, FirstName = "Harison", LastName = "Ford"});
+                    new { MovieId = 2, Id = 1, FirstName = "Mark", LastName = "Hamil" },
+                    new { MovieId = 2, Id = 2, FirstName = "Harison", LastName = "Ford" });
 
+            
 
         }
 

@@ -1,4 +1,5 @@
-﻿using Dometrain.EFCore.API.Models;
+﻿using Dometrain.EFCore.API.Data.ValueGenerator;
+using Dometrain.EFCore.API.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -9,6 +10,14 @@ namespace Dometrain.EFCore.API.Data.EntityMapping
     {
         public void Configure(EntityTypeBuilder<Genre> builder)
         {
+            //az idő nyomonkövetéshez, minden record-hoz az elkészítés idejét adja hozzá
+            //builder.Property(genre => genre.CreatedDate).HasDefaultValue(DateTime.Now);
+            //ez a felsőt írja át a megadott funcióval és ez lesz az értéke
+            //builder.Property(genre => genre.CreatedDate).HasDefaultValueSql("getdate()");
+            //harmadik megközelítés, használjuk a ValueGenerator osztályt és azon keresztül adunk értéket neki:
+            builder.Property(genre => genre.CreatedDate).HasValueGenerator<CreatedDateGenerator>();
+            //lefut ha nincs beállítva az érték és ad neki
+
             builder.ToTable("Genre");
 
             builder.HasKey(g => g.Id);
