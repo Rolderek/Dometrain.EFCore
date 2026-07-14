@@ -59,6 +59,7 @@ app.Run();
 
 
 /*
+ * --Migration--
  * kell a migrációhoz a efcore.tool, efcore.design a 9.0.17 verziótól
  * dotnet-ef migrations add "neve" migráció hozzáadása/elkezdése
  * dotnet-ef database update - adatbázis update legfrisebb migration verzióra, mugé lehet írni a pontos migráció nevét és akkor arra áll vissza
@@ -68,4 +69,25 @@ app.Run();
  * az előző sok készít egy efbundle.exe file-t 
  * ./efbundle --help //system artifact!
  * 
-*/
+ * --TEST--
+ * inmemory database - lassú lehet a teszteknél
+ * fake DbSet-ek
+ * test Db - a valós Db-nek egy kisebb verzióját tartalmazza, adatokra vigyázni kell nehogy kikerüljön valami
+ * Repository patter - 
+ * 
+ * --előnyök--
+ * test DB - ugyan az a technológia, nem kell semmi más neki csak egy DB-t cserélni, sok tesztnél érdemes ezt választani
+ * memory DB - gyorsabb, mivel a memóriában van, 
+ * 
+ * 
+ * --hátrányok--
+ * test DB mindent teszteléni túl sok is lehet, (integrationTest > unitTest), ha változás történik az adatokat újra elő kell állítani a megfelelő formában, tesztek összeférhetetlensége, 
+ * memory DB - Missing features, a DB motor miatt, Incompatible data types, Raw SQL nem 100%-ban kompatibilisek egymással (InMemoryDb < SQLite)
+ * 
+ * 
+ * --teszthez--
+ * egy "lebutított" project-et használ
+ * efcore.Sqlite nugets
+ * MemoryDatabase/SqlLiteTest.cs hazsnálata
+ * 
+*/ 
