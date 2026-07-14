@@ -2,7 +2,6 @@
 using Dometrain.EFCore.API.Models;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace Dometrain.EFCore.API.Data
 {
     public class MoviesContext : DbContext
@@ -13,6 +12,11 @@ namespace Dometrain.EFCore.API.Data
         //így már szép és hatákonyabb is, a get only property a protected Set metódust fogja használni
 
         public DbSet<Genre> Genres => Set<Genre>();
+
+        public object DidNotReceive()
+        {
+            throw new NotImplementedException();
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

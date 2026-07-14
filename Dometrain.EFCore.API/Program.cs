@@ -89,5 +89,7 @@ app.Run();
  * egy "lebutított" project-et használ
  * efcore.Sqlite nugets
  * MemoryDatabase/SqlLiteTest.cs hazsnálata
+ * új solution a project-en belül, valami nem jó a mappában
+ * 
  * 
 */ 
