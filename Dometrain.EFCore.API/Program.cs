@@ -1,4 +1,5 @@
 using Dometrain.EFCore.API.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,7 +28,8 @@ var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<MoviesContext>();
 //context.Database.EnsureDeleted(); 
 //context.Database.EnsureCreated(); 
-//eldobja a teljes táblát és újra csinálja
+//eldobja a teljes táblát és újra csinálja, de ezek helyett lehet migrálni is:
+//await context.Database.MigrateAsync();
 
 
 
