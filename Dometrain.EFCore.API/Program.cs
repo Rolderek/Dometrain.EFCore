@@ -73,7 +73,7 @@ app.Run();
  * inmemory database - lassú lehet a teszteknél
  * fake DbSet-ek
  * test Db - a valós Db-nek egy kisebb verzióját tartalmazza, adatokra vigyázni kell nehogy kikerüljön valami
- * Repository patter - 
+ * Repository pattern - 
  * 
  * --előnyök--
  * test DB - ugyan az a technológia, nem kell semmi más neki csak egy DB-t cserélni, sok tesztnél érdemes ezt választani
