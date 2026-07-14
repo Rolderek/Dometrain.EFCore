@@ -9,9 +9,11 @@ namespace Dometrain.EFCore.API.Models
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
 
+        //áttesszük shadowProperty.re a createdDate-et:
+        /*
         [JsonIgnore] //nem akarom mappelni
         public DateTime CreatedDate { get; set;  }
-
+        */
 
         //kapcsolat:
         [JsonIgnore]

@@ -15,7 +15,11 @@ namespace Dometrain.EFCore.API.Data.EntityMapping
             //ez a felsőt írja át a megadott funcióval és ez lesz az értéke
             //builder.Property(genre => genre.CreatedDate).HasDefaultValueSql("getdate()");
             //harmadik megközelítés, használjuk a ValueGenerator osztályt és azon keresztül adunk értéket neki:
-            builder.Property(genre => genre.CreatedDate).HasValueGenerator<CreatedDateGenerator>();
+            //builder.Property(genre => genre.CreatedDate).HasValueGenerator<CreatedDateGenerator>();
+            //mivel megváltozott ShadowProperty-re ezért a fenti nem lesz jó:
+            builder.Property<DateTime>("CreatedDate")
+                .HasColumnName("CreatedAt")
+                .HasValueGenerator<CreatedDateGenerator>();
             //lefut ha nincs beállítva az érték és ad neki
 
             builder.ToTable("Genre");
