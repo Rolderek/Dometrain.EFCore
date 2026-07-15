@@ -1,5 +1,6 @@
 using Dometrain.EFCore.API.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,7 +20,20 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Add a DbContext here
-builder.Services.AddDbContext<MoviesContext>(); //beregisztrálva
+//builder.Services.AddDbContext<MoviesContext>(); //beregisztrálva
+//átalakítva a MoviesContext constructor-hoz:
+builder.Services.AddDbContext<MoviesContext>(optionsBuilder =>
+    {
+        var connectionString = builder.Configuration.GetConnectionString("MoviesContext");
+        //mivel minden factory method visszatér a builderrel ezlért írhatjuk egybe is
+        optionsBuilder
+            .UseSqlServer(connectionString)
+            .LogTo(Console.WriteLine);
+    },
+    //még két paramétert megadhatunk, az életciklust amit ajánlott Scoped-re állítani:
+    ServiceLifetime.Scoped,
+    //a második a connectionString, változik e, mikor változik stb, ebben az esetben sosem fog változni: 
+    ServiceLifetime.Singleton);
 
 var app = builder.Build();
 
@@ -97,5 +111,7 @@ app.Run();
  * 
  * --Integration Test--
  * 
+ * --Javaslat--
+ * attól függően mit hazsnálunk és mire akarjuk a tesztek hangsúlyát helyezni, úgy válasszuk meg az eszközöket
  * 
 */ 
