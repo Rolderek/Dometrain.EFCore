@@ -20,6 +20,8 @@ builder.Host.UseSerilog((context, services, configuration) =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+//tenant-os swagger:
+//builder.Services.AddSwaggerGen(c => c.OperationFilter<TenantHeaderSwaggerAttribute>);
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 //
@@ -139,5 +141,22 @@ app.Run();
  * 
  * --Repository--
  * Query, create, update, delete, minden logika nélkül.
+ * 
+ * --Tenant/Tenacy-- ilyet nem hazsnálunk
+ * csak a saját csoportjának az adatait látja az adatbázisban
+ * kétféle megvalósítás lehetséges, 
+ * Discriminator -> "lapokra" osztja az adatokat 
+ * ConnectionString -> szétbontja az adatbázist több adatbázisra
+ * 
+ * --Architecture advices-- *clean architecture*
+ * web starter project - API
+ * assembly - business logic - DOMAIN
+ * data projct - EFCore használata - interfaces -> repositories
+ * migrations - másik assembly-be
+ * infrastructure code ?! interfaces stb...
+ * reference -- web -> domain, infrastructure -> domain, data/DB -> domain, migration -> domain
+ * data flow -- web -> domain -> infrastructure, domain <-> DB
+ * 
+ * 
  * 
 */ 
