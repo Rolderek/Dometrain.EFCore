@@ -1,4 +1,5 @@
 using Dometrain.EFCore.API.Data;
+using Dometrain.EFCore.API.Data.ValueGenerator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 //using Serilog;
@@ -21,6 +22,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
+//
+builder.Services.AddScoped<IUnitOfWorkManager, UnitOfWorkManager>();  
 
 // Add a DbContext here
 //builder.Services.AddDbContext<MoviesContext>(); //beregisztrálva
@@ -132,5 +135,9 @@ app.Run();
  * 
  * --Javaslat--
  * attól függően mit hazsnálunk és mire akarjuk a tesztek hangsúlyát helyezni, úgy válasszuk meg az eszközöket
+ * 
+ * 
+ * --Repository--
+ * Query, create, update, delete, minden logika nélkül.
  * 
 */ 
