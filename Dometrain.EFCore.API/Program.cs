@@ -40,6 +40,19 @@ builder.Services.AddDbContext<MoviesContext>(optionsBuilder =>
     ServiceLifetime.Singleton);
 
 
+//DBContext lifetime-hoz használta ezt:
+/*
+builder.Services.AddDbContextPool<MoviesContext>(optionsBuilder =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("MoviesContext");
+    //mivel minden factory method visszatér a builderrel ezlért írhatjuk egybe is
+    optionsBuilder
+        .UseSqlServer(connectionString);
+    //.LogTo(Console.WriteLine); 
+};
+*/
+    
+
 
 var app = builder.Build();
 
