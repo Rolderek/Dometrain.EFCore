@@ -39,6 +39,8 @@ builder.Services.AddDbContext<MoviesContext>(optionsBuilder =>
     //a második a connectionString, változik e, mikor változik stb, ebben az esetben sosem fog változni: 
     ServiceLifetime.Singleton);
 
+
+
 var app = builder.Build();
 
 //ezt ne csináljuk, de azért megmutatta:

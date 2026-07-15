@@ -26,11 +26,12 @@ namespace Dometrain.EFCore.API.Data
         }
         */
         //ez lett a fölötte lévő kód helyett, mivel a base osztályon keresztül megkapja az előtző metódusban foglaltakat, de át kell írni a Program.cs-t hogy ez rendesen működjön
+        
         public MoviesContext(DbContextOptions<MoviesContext> options) : base(options)
         {
 
         }
-
+        
 
         //itt átírhatjuk az adatbázis konvenciókat
 
