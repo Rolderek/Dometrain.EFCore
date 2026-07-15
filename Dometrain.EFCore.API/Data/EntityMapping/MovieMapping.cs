@@ -13,7 +13,7 @@ namespace Dometrain.EFCore.API.Data.EntityMapping
             //HasQuery filter - amikor bizonyos adatokat nem kell megjelenítened
             builder
                 .ToTable("Pictures")
-                .HasQueryFilter(movie => movie.ReleaseDate >= new DateTime(1900,1,1)) 
+                .HasQueryFilter(movie => movie.ReleaseDate >= new DateTime(1900, 1, 1))
                 //itt ez lehetne egy kívülről beállítható változó is, de most beégetett érték 
                 .HasKey(movie => movie.Id);
 
@@ -24,8 +24,8 @@ namespace Dometrain.EFCore.API.Data.EntityMapping
 
             builder.Property(movie => movie.ReleaseDate)
                 .HasColumnType("date");
-                //.HasColumnType("char(23)").HasConversion<string>(); 
-                //így string lesz belőle ms-el és kell validátor
+            //.HasColumnType("char(23)").HasConversion<string>(); 
+            //így string lesz belőle ms-el és kell validátor
 
             builder.Property(movie => movie.Synopsis)
                 .HasColumnType("varchar(max)");
@@ -53,10 +53,22 @@ namespace Dometrain.EFCore.API.Data.EntityMapping
                 .HasPrincipalKey(genre => genre.Id)
                 .HasForeignKey(movie => movie.GenreId);
             */
+            /*
             builder
                 .HasOne(movie => movie.Genre)
                 .WithMany(genre => genre.Movies)
                 .HasForeignKey(movie => movie.GenreId);
+            */
+            //ez is kell a Genre.Name -> alter key lett miatt:
+            builder.Property(movie => movie.MainGenreName)
+                .HasMaxLength(256)
+                .HasColumnType("varchar");
+
+            builder 
+                .HasOne(movie => movie.Genre)
+                .WithMany(genre => genre.Movies)
+                .HasPrincipalKey(genre => genre.Name) //ezt is átírni a Genre.Name - alternate key
+                .HasForeignKey(movie => movie.MainGenreName);
 
             //data seed: már nem kell a migráció miatt
             /*
@@ -93,10 +105,10 @@ namespace Dometrain.EFCore.API.Data.EntityMapping
                     new { MovieId = 2, Id = 1, FirstName = "Mark", LastName = "Hamil" },
                     new { MovieId = 2, Id = 2, FirstName = "Harison", LastName = "Ford" });
             */
-            
+
 
         }
 
-        
+
     }
 }

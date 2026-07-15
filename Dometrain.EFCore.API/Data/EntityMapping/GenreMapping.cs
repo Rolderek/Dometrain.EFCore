@@ -24,11 +24,18 @@ namespace Dometrain.EFCore.API.Data.EntityMapping
 
             builder.ToTable("Genre");
 
-            builder.HasKey(g => g.Id);
-
+            //builder.HasKey(g => g.Id); //a Name key miatt kivéve
+            /*
             builder.Property(g => g.Name)
                    .HasMaxLength(100)
                    .IsRequired();
+            */
+            builder.Property(g => g.Name)
+                .HasMaxLength(256)
+                .HasColumnType("varchar");
+
+            //a Name property-t is alternateKey-é tesszük hiszen egyedi
+            builder.HasAlternateKey(g => g.Name); //kész is
 
             //migráció miatt inaktív
             /*

@@ -20,7 +20,7 @@ builder.Host.UseSerilog((context, services, configuration) =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-//tenant-os swagger:
+//tenant-os swagger: de mi nem használjuk!
 //builder.Services.AddSwaggerGen(c => c.OperationFilter<TenantHeaderSwaggerAttribute>);
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
@@ -158,5 +158,5 @@ app.Run();
  * data flow -- web -> domain -> infrastructure, domain <-> DB
  * 
  * 
- * 
+ * péntekre - hogyan működik blazorban a DBContext!!!!
 */ 

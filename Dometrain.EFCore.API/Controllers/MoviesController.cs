@@ -24,6 +24,7 @@ public class MoviesController : Controller
     public async Task<IActionResult> GetAll()
     {
         return Ok(await _context.Movies.Include(g => g.Genre).ToListAsync()); //módosítva
+        //return Ok(await _context.Movies.ToListAsync());
     }
 
     [HttpGet("{id:int}")]
