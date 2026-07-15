@@ -1,23 +1,26 @@
 using Dometrain.EFCore.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+//using Serilog;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 //Ide jön még egy kis JsonString beállítás a saját converterekhez
-builder.Services.AddControllers()  
-    .AddJsonOptions(options =>
+
+/* //példa logger
+builder.Host.UseSerilog((context, services, configuration) =>
 {
-    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    configuration.ReadFrom.Configuration(context.Configuration);
 });
-
-
+*/
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAuthorization();
+builder.Services.AddControllers();
 
 // Add a DbContext here
 //builder.Services.AddDbContext<MoviesContext>(); //beregisztrálva
@@ -28,7 +31,8 @@ builder.Services.AddDbContext<MoviesContext>(optionsBuilder =>
         //mivel minden factory method visszatér a builderrel ezlért írhatjuk egybe is
         optionsBuilder
             .UseSqlServer(connectionString)
-            .LogTo(Console.WriteLine);
+            .LogTo(Console.WriteLine); //loggerFactory használata: .UseLoggerFactory();
+            //.EnableSensitiveDataLogging(); //ezt sose használjuk production-ban!!! hasznáűlhatjuk ezek nélkül is
     },
     //még két paramétert megadhatunk, az életciklust amit ajánlott Scoped-re állítani:
     ServiceLifetime.Scoped,
