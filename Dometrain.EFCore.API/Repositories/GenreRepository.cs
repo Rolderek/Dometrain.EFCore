@@ -1,6 +1,7 @@
 ﻿using Dometrain.EFCore.API.Data;
 using Dometrain.EFCore.API.Data.ValueGenerator;
 using Dometrain.EFCore.API.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dometrain.EFCore.API.Repositories
 {
@@ -73,6 +74,20 @@ namespace Dometrain.EFCore.API.Repositories
         public Task<Genre?> Update(int id, Genre genre)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<Genre>> GetAllFromQuery() //még nincs meghívva a controllerben
+        {
+            var minimumGenreId = 2;
+
+            var genres = await _context.Genres
+                //raw SQL parancsot tudunk beadni ezzel:
+                .FromSql($"SELECT * FROM Genre WHERE Genre.Id >= {minimumGenreId}")
+                //ez a FromSql még összeköthető linkel is, szépen kombinálható
+                .Where(genre => genre.Name != "Comdey")
+                .ToListAsync();
+
+            return genres;
         }
     }
 }

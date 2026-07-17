@@ -74,6 +74,15 @@ namespace Dometrain.EFCore.API.Controllers
             return Ok();
         }
 
+        //új metódus:
+        /*
+        [HttpGet("from-query")]
+        [ProducesResponseType(typeof(IEnumerable<Genre>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllFromQuery()
+        {
+           
+        }
+        */
     }
 }
 
