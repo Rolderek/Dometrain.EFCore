@@ -89,5 +89,15 @@ namespace Dometrain.EFCore.API.Repositories
 
             return genres;
         }
+
+        //ez csak egy eredményt ad vissza:
+        public async Task<IEnumerable<GenreName>> GetNames()
+        {
+            //var names = await _context.GenreNames.ToListAsync(); //vagy ha nem akarok ennek is DbSet-et csináni:
+            var names = await _context.Database
+                .SqlQuery<GenreName>($"SELECT Name From Genre")
+                .ToListAsync();
+            return names;
+        }
     }
 }

@@ -74,6 +74,39 @@ namespace Dometrain.EFCore.API.Controllers
             return Ok();
         }
 
+        //átírva ide a Repository-ból:
+        [HttpGet("names")] //csak a név ami létszik a swagger UI-on
+        [ProducesResponseType(typeof(IEnumerable<GenreName>), StatusCodes.Status200OK)] //mivel trünk vissza
+        public async Task<IActionResult> GetNames()
+        {
+            var names = await _context.Database
+                .SqlQuery<GenreName>($"SELECT Name From Genre")
+                .ToListAsync();
+
+            return Ok(names);
+        }
+
+        //alulról a második metódus a Repository-ból, csak adatot ad vissza meghatározott typust/fomrátumot
+        [HttpGet("GetFromCustomIdAndNameNotComedy/{id:int}")]//ne felejtsem ez a bemeneti paramétert!
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status200OK)] //itt is a pontos visszatérési érték kell
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetAllFromQuery([FromRoute] int id)
+        {
+            var genreNames = await _context.Genres
+            .FromSql($"SELECT * FROM Genre WHERE Id >= {id}")
+            .Where(genre => genre.Name != "Comedy")
+            .Select(genre => genre.Name) //csak a neveket adja vissza, szűrés
+            .ToListAsync();
+
+             if (!genreNames.Any())
+             {
+                 return NotFound();
+             }
+
+             return Ok(genreNames);
+        }
+
+
         //új metódus:
         /*
         [HttpGet("from-query")]

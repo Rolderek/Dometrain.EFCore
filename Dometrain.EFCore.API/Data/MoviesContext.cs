@@ -14,9 +14,11 @@ namespace Dometrain.EFCore.API.Data
         //így már szép és hatákonyabb is, a get only property a protected Set metódust fogja használni
         //ebből lehetne mind a kettőnek, Cinema, Television movie osztályoknak, de most maradunk az egy befoglalónál
 
+        //keyles entity:
+        public DbSet<GenreName> GenreNames => Set<GenreName>();
+
         public DbSet<Genre> Genres => Set<Genre>();
         //public DbSet<Actor> Actors => Set<Actor>(); //Actors Db set hozzáadása:
-
         /*
         //ez futtató környezet függvényében változhat és konfigurálni kell, erre van egy megoldás
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -67,6 +69,12 @@ namespace Dometrain.EFCore.API.Data
             modelBuilder.ApplyConfiguration(new CinemaMovieMapping());
             modelBuilder.ApplyConfiguration(new TelevisionMovieMapping());
             */
+
+            //keyles entity:
+            modelBuilder.Entity<GenreName>()
+                .HasNoKey()
+                //többféle mappinget használhatok rajta, table, view, function, rawSQL query... 
+                .ToSqlQuery($"SELECT Name FROM Genre");
 
         }
 
