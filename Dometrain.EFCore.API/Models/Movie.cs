@@ -26,6 +26,9 @@ public class Movie
     //public int MainGenreId { get; set; } //így már nem tudja összekötni, a név miatt
     public required string MainGenreName { get; set;  } //a Genre.Name -> alternate key lett
 
+    //Actor many-many relationship:
+    //public List<Actor> Actors { get; set; } //nekem már van egy az előző leckékből
+
 }
 
 public enum AgeRating

@@ -15,6 +15,7 @@ namespace Dometrain.EFCore.API.Data
         //ebből lehetne mind a kettőnek, Cinema, Television movie osztályoknak, de most maradunk az egy befoglalónál
 
         public DbSet<Genre> Genres => Set<Genre>();
+        //public DbSet<Actor> Actors => Set<Actor>(); //Actors Db set hozzáadása:
 
         /*
         //ez futtató környezet függvényében változhat és konfigurálni kell, erre van egy megoldás
@@ -27,7 +28,7 @@ namespace Dometrain.EFCore.API.Data
         }
         */
         //ez lett a fölötte lévő kód helyett, mivel a base osztályon keresztül megkapja az előtző metódusban foglaltakat, de át kell írni a Program.cs-t hogy ez rendesen működjön
-        
+
         public MoviesContext(DbContextOptions<MoviesContext> options) : base(options)
         {
 
@@ -59,6 +60,8 @@ namespace Dometrain.EFCore.API.Data
 
             modelBuilder.ApplyConfiguration(new MovieMapping());
             modelBuilder.ApplyConfiguration(new GenreMapping());
+            //itt is az Actor:
+            //modelBuilder.ApplyConfiguration(new ActorMapping());
             /*
             //Inheritance új mapping osztályai itt épülnek be a nagy egészbe:
             modelBuilder.ApplyConfiguration(new CinemaMovieMapping());
