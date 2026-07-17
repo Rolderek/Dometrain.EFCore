@@ -2,6 +2,7 @@
 using Dometrain.EFCore.API.Data.ValueGenerator;
 using Dometrain.EFCore.API.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Dometrain.EFCore.API.Repositories
 {
@@ -98,6 +99,30 @@ namespace Dometrain.EFCore.API.Repositories
                 .SqlQuery<GenreName>($"SELECT Name From Genre")
                 .ToListAsync();
             return names;
+        }
+
+        
+
+    }
+    //shadowproperty és queryfilter egyben, sajnos ez sincs bekötve:
+    public class GenreMappingVersionTwo : IEntityTypeConfiguration<Genre>
+    {
+        public void Configure(EntityTypeBuilder<Genre> builder)
+        {
+            builder.Property<DateTime>("CreatedData")
+                .HasColumnName("CreatedAt")
+                .HasValueGenerator<CreatedDateGenerator>();
+
+            builder.Property(g => g.Name)
+                .HasMaxLength(256)
+                .HasColumnType("varchar");
+
+            builder.Property<bool>("Deleted") //shadow property, modelben nincs csak az adatbázisban
+                .HasDefaultValue(false);
+
+            builder //global queryFilter figyeli a logikát
+                .HasQueryFilter(g => EF.Property<bool>(g, "Deleted") == false)
+                .HasAlternateKey(g => g.Name);
         }
     }
 }

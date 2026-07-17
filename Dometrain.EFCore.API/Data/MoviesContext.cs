@@ -1,5 +1,7 @@
 ﻿using Dometrain.EFCore.API.Data.EntityMapping;
+using Dometrain.EFCore.API.Interceptors;
 using Dometrain.EFCore.API.Models;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dometrain.EFCore.API.Data
@@ -35,7 +37,7 @@ namespace Dometrain.EFCore.API.Data
         {
 
         }
-        
+
 
         //itt átírhatjuk az adatbázis konvenciókat
 
@@ -75,8 +77,16 @@ namespace Dometrain.EFCore.API.Data
                 .HasNoKey()
                 //többféle mappinget használhatok rajta, table, view, function, rawSQL query... 
                 .ToSqlQuery($"SELECT Name FROM Genre");
-
         }
+
+        //ez kell az interceptorokhoz
+        /*
+        public override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
+        {
+            optionBuilder.AddInterceptors(new SaveChangesInterceptor());
+        }
+        */
+     
 
         public object DidNotReceive()
         {
