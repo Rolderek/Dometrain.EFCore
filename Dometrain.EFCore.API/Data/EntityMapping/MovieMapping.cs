@@ -60,10 +60,11 @@ namespace Dometrain.EFCore.API.Data.EntityMapping
                 .HasForeignKey(movie => movie.GenreId);
             */
             //ez is kell a Genre.Name -> alter key lett miatt:
+            
             builder.Property(movie => movie.MainGenreName)
                 .HasMaxLength(256)
-                .HasColumnType("varchar");
-
+                .HasColumnType("varchar(256)"); //beleírva  azárójel és a 256
+            
             builder 
                 .HasOne(movie => movie.Genre)
                 .WithMany(genre => genre.Movies)

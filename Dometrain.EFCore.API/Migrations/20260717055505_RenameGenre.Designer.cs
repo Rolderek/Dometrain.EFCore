@@ -4,6 +4,7 @@ using Dometrain.EFCore.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dometrain.EFCore.API.Migrations
 {
     [DbContext(typeof(MoviesContext))]
-    partial class MoviesContextModelSnapshot : ModelSnapshot
+    [Migration("20260717055505_RenameGenre")]
+    partial class RenameGenre
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,8 +39,8 @@ namespace Dometrain.EFCore.API.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar");
 
                     b.HasKey("Id");
 
@@ -56,11 +59,13 @@ namespace Dometrain.EFCore.API.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(32)");
 
-                    b.Property<int>("GenreId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("InternetRating")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("MainGenreName")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar");
 
                     b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("date");
@@ -75,7 +80,7 @@ namespace Dometrain.EFCore.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GenreId");
+                    b.HasIndex("MainGenreName");
 
                     b.ToTable("Pictures", (string)null);
                 });
@@ -84,7 +89,8 @@ namespace Dometrain.EFCore.API.Migrations
                 {
                     b.HasOne("Dometrain.EFCore.API.Models.Genre", "Genre")
                         .WithMany("Movies")
-                        .HasForeignKey("GenreId")
+                        .HasForeignKey("MainGenreName")
+                        .HasPrincipalKey("Name")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

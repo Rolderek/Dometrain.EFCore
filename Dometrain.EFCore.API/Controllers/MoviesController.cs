@@ -26,7 +26,7 @@ public class MoviesController : Controller
         return Ok(await _context.Movies.Include(g => g.Genre).ToListAsync()); //módosítva
         //return Ok(await _context.Movies.ToListAsync());
     }
-
+     
     [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(Movie), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
