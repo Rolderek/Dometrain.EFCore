@@ -120,14 +120,31 @@ public class MoviesController : Controller
     }
     */
 
+    //mondjuk ezt túl sokszor hívjuk meg és ez már lassytja a programot, akkor jöhet a compiledQuery:
+    private static readonly Func<MoviesContext, AgeRating, IEnumerable<MovieTitle>>? CompiledQuery = EF.CompileQuery((MoviesContext context, AgeRating ageRating)
+            => context.Movies
+            .Where(movie => movie.AgeRating <= ageRating)
+            .Select(movie => new MovieTitle { Id = movie.Id, Title = movie.Title }));
+
     [HttpGet("until-age/{ageRating}")]
     [ProducesResponseType(typeof(List<MovieTitle>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllUntilAge([FromRoute] AgeRating ageRating)
     {
+        //mondjuk ezt túl sokszor hívjuk meg és ez már lassytja a programot, akkor jöhet a compiledQuery:
+        /*
         var filteredTitles = await _context.Movies
             .Where(movie => movie.AgeRating <= ageRating)
             .Select(movie => new MovieTitle { Id = movie.Id, Title = movie.Title })
             .ToListAsync();
+        */
+        //function ami MoviesContex, AgeRating bemeneti paraméterrel és MovieTitle kimenetivel rendelkezik
+        /*
+        Func<MoviesContext, AgeRating, IEnumerable<MovieTitle>>? compiledQuery = EF.CompileQuery((MoviesContext context, AgeRating ageRating)
+            => context.Movies
+            .Where(movie => movie.AgeRating <= ageRating)
+            .Select(movie => new MovieTitle { Id = movie.Id, Title = movie.Title }));
+        */
+        var filteredTitles = CompiledQuery(_context, ageRating).ToList();
 
         return Ok(filteredTitles);
     }

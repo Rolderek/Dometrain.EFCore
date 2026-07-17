@@ -103,7 +103,7 @@ app.Run();
  * dotnet-ef database update - adatbázis update legfrisebb migration verzióra, mugé lehet írni a pontos migráció nevét és akkor arra áll vissza
  * dotnet-ef migrations script > script.txt //migrációk file-ba írása
  * dotnet-ef migrations script Migration2 > script2.txt //egy adott migráció file-ba írása
- * dotnet-ef migrations bundle  //envirorment felépítése Don't forget to copy appsettings.json alongside your bundle if you need it to apply migrations.
+ * dotnet-ef migrations bundle  //envirorment felépítése 
  * az előző sok készít egy efbundle.exe file-t 
  * ./efbundle --help //system artifact!
  * 
@@ -158,5 +158,15 @@ app.Run();
  * data flow -- web -> domain -> infrastructure, domain <-> DB
  * 
  * 
- * péntekre - hogyan működik blazorban a DBContext!!!!
+ * hétfőre - hogyan működik blazorban a DBContext!!!!
+ * 
+ * a legtöbb teljesítménybeli probléma a rosszul kalibrált EF-ből következik
+ * APP(LINQ) -> <-(object, visszafelé a DB-ből)- DbContext -(SQL)-> <-(Results)- DB flissítések DB <-> DB
+ * másik gyakori hibalehetőség, több DbContext van és módosítanak egyszerre, ami conflict-hoz vezethet
+ * 
+ * Slow Queries: Logging system/openTelemetry MSSQL-ben [Query Plan] megmutatja hogy pontosan mit használunk a querire pontosan és az alapján javíthatunk rajta
+ * Tuning advisor ha Trace file-t használunk és ez elmondja hogyan gyorsítsunk rajta
+ * Ha túl sokszor használunk egy query-t  akkor érdemes compliedQuery-t hazsnálni:
+ *  -DbContext, és ami kell még neki bemeneti paraméterként
+ *  
 */ 

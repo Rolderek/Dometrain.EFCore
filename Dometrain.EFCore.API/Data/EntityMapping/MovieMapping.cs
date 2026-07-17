@@ -16,11 +16,13 @@ namespace Dometrain.EFCore.API.Data.EntityMapping
                 .HasQueryFilter(movie => movie.ReleaseDate >= new DateTime(1900, 1, 1))
                 //itt ez lehetne egy kívülről beállítható változó is, de most beégetett érték 
                 .HasKey(movie => movie.Id);
+                //.IsClustered(false); //metadata changes
 
             builder.Property(movie => movie.Title)
                 .HasColumnType("varchar")
                 .HasMaxLength(128)
                 .IsRequired();
+                //.IsClustered(true); //metadata changes
 
             builder.Property(movie => movie.ReleaseDate)
                 .HasColumnType("date");

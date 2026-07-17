@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Dometrain.EFCore.API.Interceptors
 {
     //felülírhatunk eventeket az adatbázisban ezekkel,  a klényege nem törli a sort csak törölt státuszba teszi minden lekérdezésnek
+    //"logikailag törölve"
     public class SaveChangesInterceptor : ISaveChangesInterceptor //ez egy interface és default 
     {
         public InterceptionResult<int> SavingChanges(
