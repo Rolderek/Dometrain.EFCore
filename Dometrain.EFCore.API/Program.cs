@@ -33,7 +33,7 @@ builder.Services.AddScoped<IUnitOfWorkManager, UnitOfWorkManager>();
 builder.Services.AddDbContext<MoviesContext>(optionsBuilder =>
     {
         var connectionString = builder.Configuration.GetConnectionString("MoviesContext");
-        //mivel minden factory method visszatér a builderrel ezlért írhatjuk egybe is
+        //mivel minden factory method visszatér a builderrel ezért írhatjuk egybe is
         optionsBuilder
             .UseSqlServer(connectionString)
             .LogTo(Console.WriteLine); //loggerFactory használata: .UseLoggerFactory();
@@ -130,11 +130,7 @@ app.Run();
  * efcore.Sqlite nugets
  * MemoryDatabase/SqlLiteTest.cs hazsnálata
  * új solution a project-en belül, valami nem jó a mappában
- * 
- * --Repository Test--
- * 
- * --Integration Test--
- * 
+ *  
  * --Javaslat--
  * attól függően mit hazsnálunk és mire akarjuk a tesztek hangsúlyát helyezni, úgy válasszuk meg az eszközöket
  * 
@@ -151,14 +147,24 @@ app.Run();
  * --Architecture advices-- *clean architecture*
  * web starter project - API
  * assembly - business logic - DOMAIN
- * data projct - EFCore használata - interfaces -> repositories
- * migrations - másik assembly-be
- * infrastructure code ?! interfaces stb...
+ * data project - EFCore használata - interfaces -> repositories
+ * migrations - másik assembly-be - az adatbázis séma frissítő file-okat nem ugyan abban a projekt-ben tárolom
+ * infrastructure code ?! interfaces stb... logikus öröklődés, projekt függő
  * reference -- web -> domain, infrastructure -> domain, data/DB -> domain, migration -> domain
  * data flow -- web -> domain -> infrastructure, domain <-> DB
  * 
  * 
  * hétfőre - hogyan működik blazorban a DBContext!!!!
+ * két verziót ismere:
+ * A- API készen van egy Db-vel és hozzá minden ami szükséges 
+ * (modell, controllel ha kell, program.cs-ben regisztrálva az EFCore dbcontext,
+ * migráció, API végpontok HTTP get, put, delete), ezután a blazor projektben WebAssembly-vel készítünk egy 
+ * WebAssemblyHostBuilder-t aminek a másik API URL-jeit adjuk meg (HTTP kéréseket)
+ * 
+ * B- a blazor-ban inject-álunk egy HTTPClient-et és GetFromJsonAsync metódust használunk. 
+ * Itt még egyszerűsíteni lehet azzal a dolgot hogy a modelleket mind a két project-nek elérhető,
+ * mappába/project-be tessuük.
+ * 
  * 
  * a legtöbb teljesítménybeli probléma a rosszul kalibrált EF-ből következik
  * APP(LINQ) -> <-(object, visszafelé a DB-ből)- DbContext -(SQL)-> <-(Results)- DB flissítések DB <-> DB
