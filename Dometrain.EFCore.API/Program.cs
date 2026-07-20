@@ -201,5 +201,23 @@ app.Run();
  * felülírását az adatoknak. (DbUpdateConcurrencyException)
  * 
  * --Mi van ha az adatbázis/séme már létezik?
+ * erre lenne példa a DatabaseSecond project, de nem máködik jól a tool ami leképezi az adatbázisból 
+ * a modelleket és ami még kell. Otthon megoldom ma (07.20)
+ * Másik megközelítés, migrációból is lehet leképezni/módosítja a modelleket "Udpate model from database"
+ * jelenleg ez nem elérhető, megoldás, regenerate minden alkalommal amikor változás történik
+ * harmadik opció: Log-oljuk a változásokat manuálisan és ezt lekövetjük.
+ * LLBLGen pro egy db designer tool ami update-eli ha változás van sajnos ez fizetős
+ * Entity developer ennek egy ingyenes változata (LLBLGen)
+ * 
+ * --partial class--
+ * generált kód és kézzel karbantartott kódok naprakészségét hivatott intézni. Pédául:
+ * színészeknek egy új fullName adattag ami a két névből áll össze és nem akarom módosítani a teljes
+ * adatbázist ez tökéletesen megoldja. 
+ * 
+ * --kézi mappelés--
+ * mégegyszer megnézni ha kész a máködő projekt!
+ * SQL Compare - tool használata megoldja hogy ne manuálisan kelljen módosítani
+ * 
+ * 
  * 
 */ 
