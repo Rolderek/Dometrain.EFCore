@@ -38,6 +38,8 @@ builder.Services.AddDbContext<MoviesContext>(optionsBuilder =>
             .UseSqlServer(connectionString)
             .LogTo(Console.WriteLine); //loggerFactory használata: .UseLoggerFactory();
             //.EnableSensitiveDataLogging(); //ezt sose használjuk production-ban!!! hasznáűlhatjuk ezek nélkül is
+            //itt még a DB tune-t is be lehet állítani, bér sok értelme ennél a példánál nincsen,
+            //pl.: hány update legyen egy saveChanges() metóduson belül
     },
     //még két paramétert megadhatunk, az életciklust amit ajánlott Scoped-re állítani:
     ServiceLifetime.Scoped,
@@ -175,4 +177,28 @@ app.Run();
  * Ha túl sokszor használunk egy query-t  akkor érdemes compliedQuery-t hazsnálni:
  *  -DbContext, és ami kell még neki bemeneti paraméterként
  *  
+ *  
+ * --Loading Related Data-- (performance issue)
+ * Movies és Actors tábla kapcsolatával, 1 query-vel lekérem a filmeket és egy loop-ban mindhez lekéri
+ * később a hozzá kapcoslt actor-okat. 
+ * Erre ,megoldás az 
+ * "Eager" loading --csak egy lekérés lesz a DB-ből és jönnek vele az actorok is .Include
+ * "Explicit" loading -- csak azok az actorok jönnek amikre szükségünk lesz. .Load-al
+ * "Lazy" loading --alapértelmezett EF 6.0-tól trigger egy DB query amikor kell.
+ * 
+ * Eager - All for all M lekéréshez
+ * Explicit - All for some M lekéréshez, ez több lekérést jelent, kérdés milyen adatokon futtatom
+ * Lazy - csak egy navigation property-hez kell hozzáférnie és megoldja a roundtrip-eket, de sokszor ez nem ajánlott,
+ * veszélyes a közvetlen hozzáférés miatt az adatokhoz
+ * 
+ * --Concurrenccy--
+ * 2 thread ugyan azt a record-ot akarja módosítani és lekérni, ilyenkor kérhetem hogy lock-olja a DB a sort,
+ * és egymás után hajtsák végre a változtatásokat, úgy hogy a második már az első által változtatott adatokat,
+ * kapja meg.
+ * vagy "optimistic concurrency" adunk egy oszlopot ami tartalmazza azt hogy melyik tread-nél van most az adat
+ * ehhez kell egy byte[] property a model-ben ConcurrencyToken néven és ha valaki változtatni szeretné az
+ * adatot, egy ellenőrzéssel megkérdezzük hogy egyezik e a az új token-el és ha nem akkor nem engedjük a 
+ * felülírását az adatoknak. (DbUpdateConcurrencyException)
+ * 
+ * 
 */ 

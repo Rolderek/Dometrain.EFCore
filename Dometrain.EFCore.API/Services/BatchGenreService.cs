@@ -1,6 +1,7 @@
 ﻿using Dometrain.EFCore.API.Data.ValueGenerator;
 using Dometrain.EFCore.API.Models;
 using Dometrain.EFCore.API.Repositories;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Dometrain.EFCore.API.Services
 {
@@ -36,5 +37,28 @@ namespace Dometrain.EFCore.API.Services
             await _uowManager.SaveChangesAsync();
             return response;
         }
+
+        //performance feature: Batch behavior:
+        /*
+        [HttpPost("batch")]
+        [ProducesResponseType(typeof(IEnumerable<Genre>), StatusCodes.Status201Created)]
+        public async Task<IActionResult> CreateAll([FromBody] List<Genre> genres)
+        {
+            var response = await _batchService.CreateGenres(genres);
+            return CreatedAtActionResult(nameof(GetAll), response);
+        }
+
+        [HttpPost("batch-update")]
+        [ProducesResponseType(typeof(IEnumerable<Genre>), StatusCodes.Status201Created)]
+        public async Task<IActionResult> UpdateAll([FromBody] List<Genre> genres)
+        {
+            var response = await _batchService.UpdateGenres(genres);
+            return CreatedAtAction(nameof(GetAll), new { }, response);
+        }
+
+        //SQL server profile: (what is happening on that database :)
+        //egyenlőre a performance tune-all nem foglalkoztam sokat mivel ennél az appnál nincs még igazi értelme
+        //https://learn.microsoft.com/en-us/sql/tools/sql-server-profiler/sql-server-profiler?view=sql-server-ver17
+        */
     }
 }

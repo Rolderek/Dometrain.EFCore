@@ -23,8 +23,9 @@ public class MoviesController : Controller
     [ProducesResponseType(typeof(List<Movie>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll()
     {
-        return Ok(await _context.Movies.Include(g => g.Genre).ToListAsync()); //módosítva
+        return Ok(await _context.Movies.Include(g => g.Genre).ToListAsync()); //módosítva, az Include miatt Eager loading
         //return Ok(await _context.Movies.ToListAsync());
+
     }
      
     [HttpGet("{id:int}")]
@@ -47,16 +48,17 @@ public class MoviesController : Controller
                 : Ok(movie);
     }
     
+    // 2.,
     [HttpPost]
     [ProducesResponseType(typeof(Movie), StatusCodes.Status201Created)]
     public async Task<IActionResult> Create([FromBody] Movie movie)
     {
-        if (movie.Genre != null)
+        if (movie.Genre != null) //megpróbálta beszúrni az előző a Genre-t de az már létezett, ezt javítjuk ki itt
         {
             _context.Entry(movie.Genre).State = EntityState.Unchanged;
         }
         await _context.Movies.AddAsync(movie);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync();//amíg ez nem történi meg csak sorban állnak az adatok
         return CreatedAtAction(nameof(Get), new { id = movie.Id }, movie);
     }
     /*
@@ -71,33 +73,6 @@ public class MoviesController : Controller
         return CreatedAtAction(nameof(Get), new {id = movie.Id}, movie);
         //mit - GET, melyik id - az új ami létrejott automatikusan, visszaadjuk az egész objektumot ez opcionális
     }
-
-     * 2.,
-    [HttpPost]
-    [ProducesResponseType(typeof(Movie), StatusCodes.Status201Created)]
-    public async Task<IActionResult> Create([FromBody] Movie movie)
-    {
-        if (movie.Genre != null)
-        {
-            _context.Entry(movie.Genre).State = EntityState.Unchanged;
-        }
-        if (movie.Director != null)
-        {
-            _context.Entry(movie.Director).State = EntityState.Unchanged;
-        }
-        if (movie.Actors != null && movie.Actors.Any())
-        {
-            foreach (var actor in movie.Actors)
-            {
-                _context.Entry(actor).State = EntityState.Unchanged;
-            }
-        }
-        await _context.Movies.AddAsync(movie);
-        await _context.SaveChangesAsync();
-        return CreatedAtAction(nameof(Get), new { id = movie.Id }, movie);
-    }
-
-
     */
 
 
@@ -130,7 +105,7 @@ public class MoviesController : Controller
             return NotFound();
         }
         _context.Movies.Remove(exitstingMovie); //lehet egyszerűbben is írni:
-        //csak id-vel is máködik a dolog.
+        //csak id-vel is működik a dolog.
         //_context.Remove(exitstingMovie);
         await _context.SaveChangesAsync();
         return Ok();
@@ -146,7 +121,7 @@ public class MoviesController : Controller
             .ToListAsync();
 
         return Ok(filteredTitles);
-        //még így is fetch-igeljük az egész adatot a console-on
+        //még így is fetch-eljük az egész adatot a console-on
     }
 
 
@@ -157,13 +132,13 @@ public class MoviesController : Controller
     public async Task<IActionResult> GetAllByYear([FromRoute] int year)
     {
         IQueryable<Movie> AllMovies = _context.Movies;
-        //vagy var-al is máködik mert az ugyan ez a végeredménynél
+        //vagy var-al is működik mert az ugyan ez a végeredménynél
         IQueryable<Movie> filteredMovies = AllMovies.Where(m => m.ReleaseDate.Year == year);
         return Ok(await filteredMovies.ToListAsync());
     }
     */
 
-    //mondjuk ezt túl sokszor hívjuk meg és ez már lassytja a programot, akkor jöhet a compiledQuery:
+    //mondjuk ezt túl sokszor hívjuk meg és ez már lassítja a programot, akkor jöhet a compiledQuery:
     private static readonly Func<MoviesContext, AgeRating, IEnumerable<MovieTitle>>? CompiledQuery = EF.CompileQuery((MoviesContext context, AgeRating ageRating)
             => context.Movies
             .Where(movie => movie.AgeRating <= ageRating)
@@ -173,7 +148,6 @@ public class MoviesController : Controller
     [ProducesResponseType(typeof(List<MovieTitle>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllUntilAge([FromRoute] AgeRating ageRating)
     {
-        //mondjuk ezt túl sokszor hívjuk meg és ez már lassytja a programot, akkor jöhet a compiledQuery:
         /*
         var filteredTitles = await _context.Movies
             .Where(movie => movie.AgeRating <= ageRating)
