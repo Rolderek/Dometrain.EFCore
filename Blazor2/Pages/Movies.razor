@@ -19,17 +19,45 @@
     }
 </div>
 
-<div class="row">
-    <input type="number" @bind="SearchId" class="form-control mb-1" placeholder="Film ID" />
-    <button class="btn btn-info" @onclick="GetMovieById">Keresés</button>
-    @if (SelectedMovie != null)
+<div class="card p-3 mb-4">
+    <div class="row">
+        <input type="number" @bind="SearchId" class="form-control mb-1" placeholder="Film ID" />
+        <button class="btn btn-info" @onclick="GetMovieById">Keresés</button>
+        @if (SelectedMovie != null)
         {
-            <p class="mt-2 text-success">Eredmény: @SelectedMovie.Title</p>
+            <p class="mt-2 text-success">Eredmény:</p>
+            <p>@SelectedMovie.Title</p>
+            <p>@SelectedMovie.Synopsis</p>
+            <p>@SelectedMovie.ReleaseDate</p>
+            <p>@SelectedMovie.AgeRating</p>
+            <p>@SelectedMovie.InternetRating</p>
+            <p>Director: @SelectedMovie.Director.FirstName @SelectedMovie.Director.LastName</p>
+            <p>szereplők:</p>
+            @foreach (var a in SelectedMovie.Actors)
+            {
+                <p>@a.FirstName @a.LastName</p>
+            }
+            <p>@SelectedMovie.MainGenreName</p>
         }
         else
         {
             <p class="mt-2 text-danger">@Result</p>
         }
+    </div>
+</div>
+
+<div class="card p-3 mb-4">
+    <h4>Film Törlése ID Alapján</h4>
+
+    <div class="mb-2">
+        <label>Törlendő Film ID:</label>
+        <input type="number" class="form-control" @bind="DeleteId" />
+    </div>
+
+    <button class="btn btn-danger mt-2" @onclick="DeleteMovie">Film Törlése</button>
+
+    
+    <p class="mt-2 @DeleteMessageClass">@DeleteMessage</p>
 </div>
 
 @code {
@@ -38,6 +66,10 @@
     private Movie SelectedMovie;
     private int SearchId = 0;
     private string Result = "";
+
+    private int DeleteId;
+    private string DeleteMessage = "";
+    private string DeleteMessageClass = "";
     
 
     protected override async Task OnInitializedAsync()
@@ -66,6 +98,38 @@
     };
 
     
+
+    private async Task DeleteMovie()
+    {
+        try
+        {
+            DeleteMessage = "Törlés folyamatban...";
+            DeleteMessageClass = "text-warning";
+
+            var response = await Http.DeleteAsync($"movies/{DeleteId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                DeleteMessage = $"A(z) {DeleteId} azonosítójú film sikeresen törölve!";
+                DeleteMessageClass = "text-success";
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                DeleteMessage = "A megadott azonosítóval nem létezik film.";
+                DeleteMessageClass = "text-danger";
+            }
+            else
+            {
+                DeleteMessage = $"Hiba történt a törlés során: {response.StatusCode}";
+                DeleteMessageClass = "text-danger";
+            }
+        }
+        catch (Exception ex)
+        {
+            DeleteMessage = $"Hálózati hiba: {ex.Message}";
+            DeleteMessageClass = "text-danger";
+        }
+    }
 
     /*
     private string DisplayText = "";
