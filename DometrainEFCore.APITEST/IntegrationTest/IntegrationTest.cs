@@ -1,5 +1,5 @@
 ﻿using Dometrain.EFCore.API.Data;
-using Dometrain.EFCore.API.Models;
+using SharedStorage.Models;
 using Microsoft.AspNetCore.DataProtection.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;

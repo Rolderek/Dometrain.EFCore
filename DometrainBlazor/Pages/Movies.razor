@@ -1,0 +1,29 @@
+﻿@page "/movies"
+@inject HttpClient Http
+
+@using Dometrain.Shared
+
+<h3>Movies</h3>
+
+@if (MovieList == null)
+{
+    <p><em>Betöltés...</em></p>
+}
+else
+{
+    <ul>
+        @foreach (var m in MovieList)
+        {
+            <li>@m.Title (@m.ReleaseDate.Year)</li>
+        }
+    </ul>
+}
+
+@code {
+    private List<Movie> MovieList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        MovieList = await Http.GetFromJsonAsync<List<Movie>>("movies");
+    }
+}

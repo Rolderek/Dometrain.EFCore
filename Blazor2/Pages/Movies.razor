@@ -1,0 +1,85 @@
+﻿@page "/movies"
+@inject HttpClient Http
+@using SharedStorage.Models
+
+<h3>Movies</h3>
+<div class="row">
+    @if (MovieList != null)
+    {
+        <ul>
+            @foreach (var m in MovieList)
+            {
+                <li>@m.Id, @m.Title</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>Betöltés folyamatban</p>
+    }
+</div>
+
+<div class="row">
+    <input type="number" @bind="SearchId" class="form-control mb-1" placeholder="Film ID" />
+    <button class="btn btn-info" @onclick="GetMovieById">Keresés</button>
+    @if (SelectedMovie != null)
+        {
+            <p class="mt-2 text-success">Eredmény: @SelectedMovie.Title</p>
+        }
+        else
+        {
+            <p class="mt-2 text-danger">@Result</p>
+        }
+</div>
+
+@code {
+
+    private List<Movie> MovieList;
+    private Movie SelectedMovie; 
+    private int SearchId = 0;
+    private string Result = "";
+    
+    protected override async Task OnInitializedAsync()
+    {
+        MovieList = await Http.GetFromJsonAsync<List<Movie>>("movies");
+    }
+
+    private async Task GetMovieById()
+    {
+        try
+        {
+            SelectedMovie = await Http.GetFromJsonAsync<Movie>($"movies/{SearchId}");
+        }
+        catch (HttpRequestException)
+        {
+            SelectedMovie = null; 
+            Result = "A film nem található.";
+        }
+    }
+
+    /*
+    private string DisplayText = "";
+    <button class="btn btn-primary" @onclick="ListMovies">Click me</button>
+
+    <div style="white-space: pre-line;">
+        @DisplayText
+    </div>
+
+    private void ListMovies()
+    {
+        DisplayText = "";
+        if (MovieList != null)
+        {
+            foreach (var m in MovieList)
+            {
+                DisplayText += $"sorszám: {m.Id}, cím: {m.Title}\n";
+            }
+        }
+        else
+        {
+            DisplayText = "Listázás folyamatban...";
+        }
+
+    }
+    */
+}

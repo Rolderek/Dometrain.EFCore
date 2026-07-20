@@ -17,13 +17,29 @@ builder.Host.UseSerilog((context, services, configuration) =>
 });
 */
 
+//a blazornak engedélyezi kell:
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowBlazor", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 //tenant-os swagger: de mi nem használjuk!
 //builder.Services.AddSwaggerGen(c => c.OperationFilter<TenantHeaderSwaggerAttribute>);
 builder.Services.AddAuthorization();
-builder.Services.AddControllers();
+//builder.Services.AddControllers(); //a blazoros miatt módosítva erre:
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
 //
 builder.Services.AddScoped<IUnitOfWorkManager, UnitOfWorkManager>();  
 
@@ -91,8 +107,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+//szintén a blazoros megjelenítóhöz kell:
+app.UseCors("AllowBlazor");
 
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
@@ -157,6 +175,7 @@ app.Run();
  * 
  * 
  * hétfőre - hogyan működik blazorban a DBContext!!!!
+ * mi az éles projectben a Blazor server site rendering-et használjuk (egyenlőre olyat még nem csináltam, de fogok)
  * két verziót ismere:
  * A- API készen van egy Db-vel és hozzá minden ami szükséges 
  * (modell, controllel ha kell, program.cs-ben regisztrálva az EFCore dbcontext,

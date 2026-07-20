@@ -1,4 +1,4 @@
-﻿using Dometrain.EFCore.API.Models;
+﻿using SharedStorage.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

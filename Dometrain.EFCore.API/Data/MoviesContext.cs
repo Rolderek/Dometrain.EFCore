@@ -1,6 +1,6 @@
 ﻿using Dometrain.EFCore.API.Data.EntityMapping;
 using Dometrain.EFCore.API.Interceptors;
-using Dometrain.EFCore.API.Models;
+using SharedStorage.Models;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,5 +1,5 @@
 ﻿using Dometrain.EFCore.API.Data.ValueGenerator;
-using Dometrain.EFCore.API.Models;
+using SharedStorage.Models;
 using Dometrain.EFCore.API.Repositories;
 using Microsoft.AspNetCore.Mvc;
 

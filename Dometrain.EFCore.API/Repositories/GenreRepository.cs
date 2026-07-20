@@ -1,6 +1,6 @@
 ﻿using Dometrain.EFCore.API.Data;
 using Dometrain.EFCore.API.Data.ValueGenerator;
-using Dometrain.EFCore.API.Models;
+using SharedStorage.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
