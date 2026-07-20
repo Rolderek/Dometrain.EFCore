@@ -200,5 +200,6 @@ app.Run();
  * adatot, egy ellenőrzéssel megkérdezzük hogy egyezik e a az új token-el és ha nem akkor nem engedjük a 
  * felülírását az adatoknak. (DbUpdateConcurrencyException)
  * 
+ * --Mi van ha az adatbázis/séme már létezik?
  * 
 */ 
