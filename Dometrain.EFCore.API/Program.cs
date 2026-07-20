@@ -241,5 +241,19 @@ app.Run();
  * migrációt átnézni, mapping-eket beállítani az aktuálisnka megfelelően, elvileg ezután máködni fog.
  * ezután migrálni, database update és kész
  * 
+ * --Cosmos DB--
+ * https://azure.microsoft.com/en-us/products/cosmos-db
+ * collection-ban tárol, pl a movie, actors, genre táblák egy dokumentumban lesznek, persze más formában
+ * egy teljes adat gráf feltöltésére specializálódtak és ebben jók. másban jók és másban gyengék is. 
+ * |-pozitívumok-|
+ * --validáció gyors és egyszerű
+ * --adatmennyiség egyszerre be és kiírása
+ * --flexibilis query-k
  * 
+ * |-negavtívumok-|
+ * --dokumentumok formája határozza meg a query-k felépítését
+ * --drága lehet ha nem jól használják
+ * 
+ * 
+ *Cosmost kipróbálni ráérős időben
 */ 
