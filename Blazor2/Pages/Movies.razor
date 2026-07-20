@@ -39,6 +39,7 @@
     private int SearchId = 0;
     private string Result = "";
     
+
     protected override async Task OnInitializedAsync()
     {
         MovieList = await Http.GetFromJsonAsync<List<Movie>>("movies");
@@ -56,6 +57,15 @@
             Result = "A film nem található.";
         }
     }
+
+    private Movie NewMovie = new Movie
+    {
+        ReleaseDate = DateTime.UtcNow,
+        MainGenreName = "Default",
+        Genre = new Genre { Id = 1, Name = "Default" }
+    };
+
+    
 
     /*
     private string DisplayText = "";
