@@ -51,13 +51,56 @@ public class MoviesController : Controller
     [ProducesResponseType(typeof(Movie), StatusCodes.Status201Created)]
     public async Task<IActionResult> Create([FromBody] Movie movie)
     {
+        if (movie.Genre != null)
+        {
+            _context.Entry(movie.Genre).State = EntityState.Unchanged;
+        }
+        await _context.Movies.AddAsync(movie);
+        await _context.SaveChangesAsync();
+        return CreatedAtAction(nameof(Get), new { id = movie.Id }, movie);
+    }
+    /*
+     * 1.,
+    [HttpPost]
+    [ProducesResponseType(typeof(Movie), StatusCodes.Status201Created)]
+    public async Task<IActionResult> Create([FromBody] Movie movie)
+    {
         await _context.Movies.AddAsync(movie);
 
         await _context.SaveChangesAsync(); //amíg ez nem történi meg csak sorban állnak az adatok
         return CreatedAtAction(nameof(Get), new {id = movie.Id}, movie);
         //mit - GET, melyik id - az új ami létrejott automatikusan, visszaadjuk az egész objektumot ez opcionális
     }
-    
+
+     * 2.,
+    [HttpPost]
+    [ProducesResponseType(typeof(Movie), StatusCodes.Status201Created)]
+    public async Task<IActionResult> Create([FromBody] Movie movie)
+    {
+        if (movie.Genre != null)
+        {
+            _context.Entry(movie.Genre).State = EntityState.Unchanged;
+        }
+        if (movie.Director != null)
+        {
+            _context.Entry(movie.Director).State = EntityState.Unchanged;
+        }
+        if (movie.Actors != null && movie.Actors.Any())
+        {
+            foreach (var actor in movie.Actors)
+            {
+                _context.Entry(actor).State = EntityState.Unchanged;
+            }
+        }
+        await _context.Movies.AddAsync(movie);
+        await _context.SaveChangesAsync();
+        return CreatedAtAction(nameof(Get), new { id = movie.Id }, movie);
+    }
+
+
+    */
+
+
     [HttpPut("{id:int}")]
     [ProducesResponseType(typeof(Movie), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
