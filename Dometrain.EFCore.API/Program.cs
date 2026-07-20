@@ -237,6 +237,9 @@ app.Run();
  * mégegyszer megnézni ha kész a máködő projekt!
  * SQL Compare - tool használata megoldja hogy ne manuálisan kelljen módosítani
  * 
+ * --átállni másik SQL szolgáltatóra--
+ * migrációt átnézni, mapping-eket beállítani az aktuálisnka megfelelően, elvileg ezután máködni fog.
+ * ezután migrálni, database update és kész
  * 
  * 
 */ 
