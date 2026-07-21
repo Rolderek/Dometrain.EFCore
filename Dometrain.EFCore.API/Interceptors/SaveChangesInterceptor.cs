@@ -21,9 +21,9 @@ namespace Dometrain.EFCore.API.Interceptors
                 return result;
             }
 
-            var tracker = context.ChangeTracker; //ez a DB-ben egy objektum
+            var tracker = context.ChangeTracker; //ez a DB-ben egy objektum amin módosítás történt EF oldalról
             //milyen entitások vannak követve most és mi az aktuális állapotuk
-            var delteEntries = tracker.Entries<Genre>()
+            var delteEntries = tracker.Entries<Genre>()//töröltek kigyűjtése
                 .Where(entry => entry.State == EntityState.Deleted); //5 féle State van
 
             foreach (var deleteEntry in delteEntries)
@@ -45,5 +45,6 @@ namespace Dometrain.EFCore.API.Interceptors
         }
 
         //azért használjuk a nem async verziót mert nincs olyan kódunk amihez a másik kellene egyenlőre
+        //as null tracking - ne tartsad számon kedves EF törlés és mentésnél
     }
 }

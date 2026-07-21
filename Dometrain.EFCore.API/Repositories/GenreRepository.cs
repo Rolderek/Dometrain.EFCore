@@ -1,8 +1,9 @@
 ﻿using Dometrain.EFCore.API.Data;
 using Dometrain.EFCore.API.Data.ValueGenerator;
-using SharedStorage.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using SharedStorage.Models;
 
 namespace Dometrain.EFCore.API.Repositories
 {
@@ -24,7 +25,9 @@ namespace Dometrain.EFCore.API.Repositories
         Task<Genre?> Update(int id, Genre genre);
         Task<bool> Delete(int id);
     }
-    
+
+
+
     public class GenreRepository : IGenreRepository
     {
         private readonly MoviesContext _context;
@@ -80,7 +83,7 @@ namespace Dometrain.EFCore.API.Repositories
         public async Task<IEnumerable<Genre>> GetAllFromQuery() //még nincs meghívva a controllerben
         {
             var minimumGenreId = 2;
-
+            
             var genres = await _context.Genres
                 //raw SQL parancsot tudunk beadni ezzel:
                 .FromSql($"SELECT * FROM Genre WHERE Genre.Id >= {minimumGenreId}")
@@ -88,7 +91,11 @@ namespace Dometrain.EFCore.API.Repositories
                 .Where(genre => genre.Name != "Comdey")
                 .ToListAsync();
 
-            return genres;
+
+
+            var genre2 = await _context.Genres.Where(g => g.Name != "Comedy" && g.Id >= minimumGenreId).ToListAsync();
+
+            return genre2;
         }
 
         //ez csak egy eredményt ad vissza:
@@ -98,10 +105,14 @@ namespace Dometrain.EFCore.API.Repositories
             var names = await _context.Database
                 .SqlQuery<GenreName>($"SELECT Name From Genre")
                 .ToListAsync();
+
+           
             return names;
+
+
         }
 
-        
+
 
     }
     //shadowproperty és queryfilter egyben, sajnos ez sincs bekötve:

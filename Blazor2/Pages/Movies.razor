@@ -3,8 +3,9 @@
 @using SharedStorage.Models
 
 <h3>Movies</h3>
+
 <div class="row">
-    @if (MovieList != null)
+    @if (MovieList.Count > 0)
     {
         <ul>
             @foreach (var m in MovieList)
@@ -15,7 +16,7 @@
     }
     else
     {
-        <p>Betöltés folyamatban</p>
+        <p>A filmek listája üres</p>
     }
 </div>
 
@@ -60,17 +61,122 @@
     <p class="mt-2 @DeleteMessageClass">@DeleteMessage</p>
 </div>
 
+<div class="card p-3 mb-4 shadow-sm">
+    <h4 class="mb-4">Új Film Létrehozása</h4>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h5 class="text-primary mb-3">Alapadatok</h5>
+
+            <div class="mb-2">
+                <label>Cím:</label>
+                <input class="form-control" @bind="NewMovie.Title" placeholder="Pl.: Sötét Visszhang" />
+            </div>
+
+            <div class="mb-2">
+                <label>Szinopszis:</label>
+                <textarea class="form-control" @bind="NewMovie.Synopsis" rows="3" placeholder="Rövid leírás..."></textarea>
+            </div>
+
+            <div class="mb-2">
+                <label>Megjelenés dátuma:</label>
+                <input type="datetime-local" class="form-control" @bind="NewMovie.ReleaseDate" />
+            </div>
+
+            <div class="row mb-2">
+                <div class="col">
+                    <label>Korhatár (AgeRating):</label>
+                    <select class="form-control" @bind="NewMovie.AgeRating">
+                        @foreach (var rating in Enum.GetValues(typeof(AgeRating)))
+                        {
+                            <option value="@rating">@rating.ToString() (@((int)rating))</option>
+                        }
+                    </select>
+                </div>
+                <div class="col">
+                    <label>Internet Rating:</label>
+                    <input type="number" class="form-control" @bind="NewMovie.InternetRating" min="0" max="10" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col">
+                    <label>Műfaj (Genre Name):</label>
+                    <input class="form-control" @bind="NewMovie.Genre.Name" placeholder="Pl.: Thriller" />
+                </div>
+                <div class="col">
+                    <label>Fő műfaj (MainGenre):</label>
+                    <input class="form-control" @bind="NewMovie.MainGenreName" placeholder="Pl.: Thriller" />
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <h5 class="text-primary mb-3">Stáb</h5>
+
+            <h6>Rendező</h6>
+            <div class="row mb-4">
+                <div class="col">
+                    <input class="form-control" @bind="NewMovie.Director.FirstName" placeholder="Keresztnév (pl. David)" />
+                </div>
+                <div class="col">
+                    <input class="form-control" @bind="NewMovie.Director.LastName" placeholder="Vezetéknév (pl. Fincher)" />
+                </div>
+            </div>
+
+            <h6>Színészek</h6>
+            @foreach (var actor in NewMovie.Actors)
+            {
+                <div class="row mb-2">
+                    <div class="col">
+                        <input class="form-control" @bind="actor.FirstName" placeholder="Keresztnév" />
+                    </div>
+                    <div class="col">
+                        <input class="form-control" @bind="actor.LastName" placeholder="Vezetéknév" />
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-outline-danger" @onclick="() => NewMovie.Actors.Remove(actor)">X</button>
+                    </div>
+                </div>
+            }
+            <button class="btn btn-sm btn-outline-secondary mt-1" @onclick="AddActor">+ Új színész hozzáadása</button>
+        </div>
+    </div>
+
+    <hr />
+    <button class="btn btn-success btn-lg w-100" @onclick="CreateMovie">Film Mentése az Adatbázisba</button>
+    <p class="mt-3 text-center fw-bold @CreateMessageClass">@CreateMessage</p>
+</div>
+
 @code {
-
+    //alap lista:
     private List<Movie> MovieList = new List<Movie>();
-    private Movie SelectedMovie;
-    private int SearchId = 0;
+    //kereséshez:
+    private int SearchId;
+    private Movie? SelectedMovie;
     private string Result = "";
-
+    private int EditSearchId;
+    //delete változói:
     private int DeleteId;
     private string DeleteMessage = "";
     private string DeleteMessageClass = "";
-    
+    //put cuccai:
+    //példa film, dummy adattal:
+    private Movie NewMovie = new Movie //üres
+    {
+        Title = "",
+        ReleaseDate = DateTime.UtcNow,
+        Synopsis = "",
+        AgeRating = (AgeRating)12,
+        InternetRating = 0,
+        MainGenreName = "",
+        Genre = new Genre { Name = "" },
+        Director = new Person { FirstName = "", LastName = "" },
+        Actors = new List<Person> { new Person { FirstName = "", LastName = "" } }
+    };
+    private Movie? MovieToEdit;
+    private string CreateMessage = "";
+    private string CreateMessageClass = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -81,56 +187,201 @@
     {
         try
         {
-            SelectedMovie = await Http.GetFromJsonAsync<Movie>($"movies/{SearchId}");
+            foreach(var m in MovieList)
+            {
+                if (m.Id == SearchId)
+                {
+                    SelectedMovie = m;
+                }
+            }
         }
-        catch (HttpRequestException)
+        catch (Exception ex)
         {
-            SelectedMovie = null; 
-            Result = "A film nem található.";
+            CreateMessage = $"Hiab történt: {ex.Message}";
         }
     }
 
-    private Movie NewMovie = new Movie
-    {
-        ReleaseDate = DateTime.UtcNow,
-        MainGenreName = "Default",
-        Genre = new Genre { Id = 1, Name = "Default" }
-    };
 
-    
+    private async Task GetMovieForEdit()
+    {
+        CreateMessage = "Betöltés...";
+        CreateMessageClass = "text-info";
+        MovieToEdit = null;
+
+        if (EditSearchId <= 0)
+        {
+            CreateMessage = "Kérlek, adj meg egy érvényes ID-t!";
+            CreateMessageClass = "text-danger";
+            return;
+        }
+
+        try
+        {
+            MovieToEdit = await Http.GetFromJsonAsync<Movie>($"movies/{EditSearchId}");
+            CreateMessage = ""; // Ha sikerült, eltüntetjük a hibaüzenetet, és az @if megjeleníti az űrlapot
+        }
+        catch (HttpRequestException)
+        {
+            MovieToEdit = null;
+            CreateMessage = $"A(z) {EditSearchId}. azonosítójú film nem található.";
+            CreateMessageClass = "text-danger";
+        }
+        catch (Exception ex)
+        {
+            MovieToEdit = null;
+            CreateMessage = $"Váratlan hiba: {ex.Message}";
+            CreateMessageClass = "text-danger";
+        }
+    }
 
     private async Task DeleteMovie()
     {
+        string msg = "";
         try
         {
             DeleteMessage = "Törlés folyamatban...";
             DeleteMessageClass = "text-warning";
 
             var response = await Http.DeleteAsync($"movies/{DeleteId}");
-
+            msg = response.StatusCode.ToString();
             if (response.IsSuccessStatusCode)
             {
                 DeleteMessage = $"A(z) {DeleteId} azonosítójú film sikeresen törölve!";
                 DeleteMessageClass = "text-success";
+                MovieList = await Http.GetFromJsonAsync<List<Movie>>("movies");
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 DeleteMessage = "A megadott azonosítóval nem létezik film.";
                 DeleteMessageClass = "text-danger";
             }
-            else
-            {
-                DeleteMessage = $"Hiba történt a törlés során: {response.StatusCode}";
-                DeleteMessageClass = "text-danger";
-            }
         }
         catch (Exception ex)
         {
-            DeleteMessage = $"Hálózati hiba: {ex.Message}";
+            DeleteMessage = $"Hiba történt a törlés során: {ex.Message}, {msg}";
             DeleteMessageClass = "text-danger";
         }
     }
 
+    private void AddActor()
+    {
+        if (MovieToEdit != null)
+        {
+            MovieToEdit.Actors.Add(new Person { FirstName = "", LastName = "" });
+        }
+    }
+
+    private async Task CreateMovie() //if - siker, else - nem sikerült, catch - exception
+    {
+        try //API hiba, CORS hiba miatt is kell ez
+        {
+            CreateMessage = "Mentés folyamatban...";
+            CreateMessageClass = "text-warning";//piros
+
+            var response = await Http.PostAsJsonAsync("movies", NewMovie);
+
+            if (response.IsSuccessStatusCode)
+            {
+                CreateMessage = "A film sikeresen létrejött!";
+                CreateMessageClass = "text-success";//zöld
+
+                NewMovie = new Movie //swaggerből nézve, ha már ott máködött
+                {
+                    Title = "",
+                    ReleaseDate = DateTime.UtcNow,
+                    Synopsis = "",
+                    AgeRating = (AgeRating)12,
+                    InternetRating = 0,
+                    MainGenreName = "",
+                    Genre = new Genre { Name = "" },
+                    Director = new Person { FirstName = "", LastName = "" },
+                    Actors = new List<Person> { new Person { FirstName = "", LastName = "" } }
+                };
+                MovieList = await Http.GetFromJsonAsync<List<Movie>>("movies");
+            }
+            else
+            {
+                CreateMessage = $"Hiba történt: {response.StatusCode}";
+                CreateMessageClass = "text-danger";//piros
+            }
+        }
+        catch (Exception ex)
+        {
+            CreateMessage = $"Hálózati hiba: {ex.Message}";
+            CreateMessageClass = "text-danger";//piros
+        }
+    }
+
+    
+
+    /* //régebbi PUT nem teljes
+    private Movie NewMovie = new Movie
+    {
+        Title = "A pék bosszúja",
+        ReleaseDate = DateTime.Parse("2026-03-15T12:30:00Z"),
+        Synopsis = "Amikor az alvilág elrabolja a nagymamája titkos receptjét, a város legjobb pékje sodrófát ragad, és akcióba lép.",
+
+        AgeRating = (AgeRating)12, 
+        InternetRating = 3,
+        MainGenreName = "Comedy",
+
+        Genre = new Genre { Name = "Comedy" },
+
+        Director = new Person { FirstName = "Taika", LastName = "Waititi" },
+
+        Actors = new List<Person>
+    {
+        new Person { FirstName = "Jack", LastName = "Black" }
+    }
+    };
+
+    //valmi ilyesmit kellene itt is:
+                   //Title = "",
+                   //ReleaseDate = DateTime.UtcNow,
+                   //Synopsis = "",
+                   //AgeRating = (AgeRating)12,
+                   //InternetRating = 0,
+                   //MainGenreName = "",
+                   //Genre = new Genre { Name = "" },
+                   //Director = new Person { FirstName = "", LastName = "" },
+                   //Actors = new List<Person> { new Person { FirstName = "", LastName = "" } }
+
+     
+    
+
+    private async Task CreateMovie()
+    {
+        try
+        {
+            CreateMessage = "Mentés folyamatban...";
+            CreateMessageClass = "text-warning";//piros
+            var response = await Http.PostAsJsonAsync("movies", NewMovie);
+            if (response.IsSuccessStatusCode)
+            {
+                CreateMessage = "A film sikeresen létrejött!";
+                CreateMessageClass = "text-success";//zöld :)
+
+                NewMovie = new Movie
+                {
+                    ReleaseDate = DateTime.UtcNow,
+                    MainGenreName = "Default",
+                    Genre = new Genre { Id = 1, Name = "Default" }
+                };
+                MovieList = await Http.GetFromJsonAsync<List<Movie>>("movies");
+            }
+            else
+            {
+                CreateMessage = $"Hiba történt: {response.StatusCode}";
+                CreateMessageClass = "text-danger"; //piros
+            }
+        }
+        catch (Exception ex)
+        {
+            CreateMessage = $"Hálózati hiba: {ex.Message}";
+            CreateMessageClass = "text-danger"; //piros
+        }
+    }
+    */
     /*
     private string DisplayText = "";
     <button class="btn btn-primary" @onclick="ListMovies">Click me</button>

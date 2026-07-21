@@ -1,7 +1,8 @@
-﻿using SharedStorage.Models;
+﻿using Dometrain.EFCore.API.Data.ValueConverter;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using SharedStorage.Models;
 using System.Reflection.Emit;
 
 namespace Dometrain.EFCore.API.Data.EntityMapping
@@ -22,10 +23,11 @@ namespace Dometrain.EFCore.API.Data.EntityMapping
                 .HasColumnType("varchar")
                 .HasMaxLength(128)
                 .IsRequired();
-                //.IsClustered(true); //metadata changes
+            //.IsClustered(true); //metadata changes
 
             builder.Property(movie => movie.ReleaseDate)
                 .HasColumnType("date");
+                
             //.HasColumnType("char(23)").HasConversion<string>(); 
             //így string lesz belőle ms-el és kell validátor
 

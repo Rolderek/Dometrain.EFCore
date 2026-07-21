@@ -41,6 +41,7 @@ builder.Services.AddControllers()
     });
 //
 builder.Services.AddScoped<IUnitOfWorkManager, UnitOfWorkManager>();  
+//builder.Services.AddTransient<Dometrain.EFCore.API.Repositories.GenreRepository>();
 
 // Add a DbContext here
 //builder.Services.AddDbContext<MoviesContext>(); //beregisztrálva
@@ -108,6 +109,10 @@ app.UseHttpsRedirection();
 
 //szintén a blazoros megjelenítóhöz kell:
 app.UseCors("AllowBlazor"); //Cross-Origin Resource Sharing
+//app.MapGet("/test1", async (Dometrain.EFCore.API.Repositories.GenreRepository repo) =>
+//{
+//    return await repo.GetAllFromQuery();
+//});
 
 app.UseAuthorization();
 app.MapControllers();
@@ -187,7 +192,7 @@ app.Run();
  * 
  * 
  * a legtöbb teljesítménybeli probléma a rosszul kalibrált EF-ből következik
- * APP(LINQ) -> <-(object, visszafelé a DB-ből)- DbContext -(SQL)-> <-(Results)- DB flissítések DB <-> DB
+ * APP(LINQ) -> <-(object, visszafelé a DB-ből)- DbContext -(SQL)-> <-(Results)- DB frissítések DB <-> DB
  * másik gyakori hibalehetőség, több DbContext van és módosítanak egyszerre, ami conflict-hoz vezethet
  * 
  * Slow Queries: Logging system/openTelemetry MSSQL-ben [Query Plan] megmutatja hogy pontosan mit használunk a querire pontosan és az alapján javíthatunk rajta
@@ -202,11 +207,11 @@ app.Run();
  * Erre ,megoldás az 
  * "Eager" loading --csak egy lekérés lesz a DB-ből és jönnek vele az actorok is .Include
  * "Explicit" loading -- csak azok az actorok jönnek amikre szükségünk lesz. .Load-al
- * "Lazy" loading --alapértelmezett EF 6.0-tól trigger egy DB query amikor kell.
+ * "Lazy" loading --nem alapértelmezett EF 6.0-tól trigger egy DB query amikor kell.
  * 
  * Eager - All for all M lekéréshez
  * Explicit - All for some M lekéréshez, ez több lekérést jelent, kérdés milyen adatokon futtatom
- * Lazy - csak egy navigation property-hez kell hozzáférnie és megoldja a roundtrip-eket, de sokszor ez nem ajánlott,
+ * Lazy - csak egy navigation property-hez kell hozzáférnie és megoldja a roundtrip-eket, de sokszor ez nem ajánlott, folyamatosan triggereli az adatbázis kapcsolatot
  * veszélyes a közvetlen hozzáférés miatt az adatokhoz
  * 
  * --Concurrenccy--

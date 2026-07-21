@@ -7,8 +7,8 @@ namespace Dometrain.EFCore.API.Data.ValueConverter
     public class DateTimeToChar8Converter : ValueConverter<DateTime, string> //model/database oldali adattagok
     {
         public DateTimeToChar8Converter() : base(
-            dateTime => dateTime.ToString("yyyyMdd", CultureInfo.InvariantCulture), 
-            StringValueGenerator => DateTime.ParseExact(StringValueGenerator, "yyyyMMdd", CultureInfo.InvariantCulture))
+            inputvalue => inputvalue.ToString("yyyyMdd", CultureInfo.InvariantCulture), 
+            dbvalue => DateTime.ParseExact(dbvalue, "yyyyMMdd", CultureInfo.InvariantCulture))
         { }
 
 

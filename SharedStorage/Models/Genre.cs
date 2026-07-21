@@ -17,7 +17,8 @@ namespace SharedStorage.Models
 
         //kapcsolat:
         [JsonIgnore]
-        public ICollection<Movie> Movies { get; set; } = new HashSet<Movie>();
+        //ez lazy loading is lehet, amikor erre referálok akkor tölti be az adatot, ha nincs akkor nem
+        public ICollection<Movie> Movies { get; set; } = new HashSet<Movie>(); 
 
     }
 }

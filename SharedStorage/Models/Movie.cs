@@ -10,6 +10,7 @@ namespace SharedStorage.Models
 
         public int Id { get; set; }
         public string? Title { get; set; }
+
         public DateTime ReleaseDate { get; set; }
         public string? Synopsis { get; set; }
         public AgeRating AgeRating { get; set; }
@@ -29,6 +30,7 @@ namespace SharedStorage.Models
 
         //Actor many-many relationship:
         //public List<Actor> Actors { get; set; } //nekem már van egy az előző leckékből
+       
 
     }
 
