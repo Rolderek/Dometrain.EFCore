@@ -193,6 +193,14 @@
                 {
                     SelectedMovie = m;
                 }
+                else if (SearchId <= 0)
+                {
+                    Result = "Érvénytelen film ID.";
+                }
+                else
+                {
+                    Result = "Nincs találat";
+                }
             }
         }
         catch (Exception ex)
@@ -218,13 +226,7 @@
         try
         {
             MovieToEdit = await Http.GetFromJsonAsync<Movie>($"movies/{EditSearchId}");
-            CreateMessage = ""; // Ha sikerült, eltüntetjük a hibaüzenetet, és az @if megjeleníti az űrlapot
-        }
-        catch (HttpRequestException)
-        {
-            MovieToEdit = null;
-            CreateMessage = $"A(z) {EditSearchId}. azonosítójú film nem található.";
-            CreateMessageClass = "text-danger";
+            CreateMessage = "";
         }
         catch (Exception ex)
         {
@@ -265,10 +267,7 @@
 
     private void AddActor()
     {
-        if (MovieToEdit != null)
-        {
-            MovieToEdit.Actors.Add(new Person { FirstName = "", LastName = "" });
-        }
+        NewMovie.Actors.Add(new Person { FirstName = "", LastName = "" });
     }
 
     private async Task CreateMovie() //if - siker, else - nem sikerült, catch - exception
