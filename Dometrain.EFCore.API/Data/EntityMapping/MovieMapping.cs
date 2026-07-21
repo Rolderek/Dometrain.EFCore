@@ -65,7 +65,7 @@ namespace Dometrain.EFCore.API.Data.EntityMapping
             
             builder.Property(movie => movie.MainGenreName)
                 .HasMaxLength(256)
-                .HasColumnType("varchar(256)"); //beleírva  azárójel és a 256
+                .HasColumnType("varchar(256)"); //beleírva a zárójel és a 256
             
             builder 
                 .HasOne(movie => movie.Genre)

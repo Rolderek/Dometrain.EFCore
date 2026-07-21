@@ -7,7 +7,6 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 //Ide jön még egy kis JsonString beállítás a saját converterekhez
 
 /* //példa logger
@@ -53,8 +52,8 @@ builder.Services.AddDbContext<MoviesContext>(optionsBuilder =>
         optionsBuilder
             .UseSqlServer(connectionString)
             .LogTo(Console.WriteLine); //loggerFactory használata: .UseLoggerFactory();
-            //.EnableSensitiveDataLogging(); //ezt sose használjuk production-ban!!! hasznáűlhatjuk ezek nélkül is
-            //itt még a DB tune-t is be lehet állítani, bér sok értelme ennél a példánál nincsen,
+            //.EnableSensitiveDataLogging(); //ezt sose használjuk production-ban!!! használhatjuk ezek nélkül is
+            //itt még a DB tune-t is be lehet állítani, bár sok értelme ennél a példánál nincsen,
             //pl.: hány update legyen egy saveChanges() metóduson belül
     },
     //még két paramétert megadhatunk, az életciklust amit ajánlott Scoped-re állítani:
@@ -108,7 +107,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 //szintén a blazoros megjelenítóhöz kell:
-app.UseCors("AllowBlazor");
+app.UseCors("AllowBlazor"); //Cross-Origin Resource Sharing
 
 app.UseAuthorization();
 app.MapControllers();

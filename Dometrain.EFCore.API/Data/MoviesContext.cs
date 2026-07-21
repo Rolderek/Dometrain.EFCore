@@ -8,15 +8,12 @@ namespace Dometrain.EFCore.API.Data
 {
     public class MoviesContext : DbContext
     {
-
-
-
         //public DbSet<Movie> Movies { get; set; } = null!; //nem a leg elegánsabb megoldás, de elmegy
         public DbSet<Movie> Movies => Set<Movie>();
         //így már szép és hatákonyabb is, a get only property a protected Set metódust fogja használni
         //ebből lehetne mind a kettőnek, Cinema, Television movie osztályoknak, de most maradunk az egy befoglalónál
 
-        //keyles entity:
+        //keyless entity:
         public DbSet<GenreName> GenreNames => Set<GenreName>();
 
         public DbSet<Genre> Genres => Set<Genre>();
@@ -31,7 +28,8 @@ namespace Dometrain.EFCore.API.Data
             optionsBuilder.LogTo(Console.WriteLine); //mit és hogyna csinálja, írja ki a console-ra
         }
         */
-        //ez lett a fölötte lévő kód helyett, mivel a base osztályon keresztül megkapja az előtző metódusban foglaltakat, de át kell írni a Program.cs-t hogy ez rendesen működjön
+        //ez lett a fölötte lévő kód helyett, mivel a base osztályon keresztül megkapja az előtző metódusban foglaltakat,
+        //de át kell írni a Program.cs-t hogy ez rendesen működjön
 
         public MoviesContext(DbContextOptions<MoviesContext> options) : base(options)
         {

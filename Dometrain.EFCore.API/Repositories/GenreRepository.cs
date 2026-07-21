@@ -105,6 +105,7 @@ namespace Dometrain.EFCore.API.Repositories
 
     }
     //shadowproperty és queryfilter egyben, sajnos ez sincs bekötve:
+    //logikai törlés
     public class GenreMappingVersionTwo : IEntityTypeConfiguration<Genre>
     {
         public void Configure(EntityTypeBuilder<Genre> builder)

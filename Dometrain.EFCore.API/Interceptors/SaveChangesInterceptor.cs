@@ -6,7 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dometrain.EFCore.API.Interceptors
 {
-    //felülírhatunk eventeket az adatbázisban ezekkel,  a klényege nem törli a sort csak törölt státuszba teszi minden lekérdezésnek
+    //felülírhatunk eventeket az adatbázisban ezekkel,
+    //a klényege nem törli a sort csak törölt státuszba teszi minden lekérdezésnek
     //"logikailag törölve"
     public class SaveChangesInterceptor : ISaveChangesInterceptor //ez egy interface és default 
     {
@@ -21,14 +22,15 @@ namespace Dometrain.EFCore.API.Interceptors
             }
 
             var tracker = context.ChangeTracker; //ez a DB-ben egy objektum
-            var delteEntries = tracker.Entries<Genre>()//milyen entitások vannak követve most és mi az aktuális állapotuk
+            //milyen entitások vannak követve most és mi az aktuális állapotuk
+            var delteEntries = tracker.Entries<Genre>()
                 .Where(entry => entry.State == EntityState.Deleted); //5 féle State van
 
             foreach (var deleteEntry in delteEntries)
             {
                 deleteEntry.Property<bool>("Deleted").CurrentValue = true;
-                deleteEntry.State = EntityState.Modified; //változás a sorban, deleted flag = true és jöhet a change tracker
-                
+                deleteEntry.State = EntityState.Modified;
+                //változás a sorban, deleted flag = true és jöhet a change tracker
             }
 
             return result;
@@ -42,6 +44,6 @@ namespace Dometrain.EFCore.API.Interceptors
             return ValueTask.FromResult(SavingChanges(eventData, result));
         }
 
-        //azért használjuk a nem async verziót mert nincs olyan kódunk amihez az kellene egyenlőre
+        //azért használjuk a nem async verziót mert nincs olyan kódunk amihez a másik kellene egyenlőre
     }
 }

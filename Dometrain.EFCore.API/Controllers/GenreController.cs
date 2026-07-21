@@ -75,7 +75,7 @@ namespace Dometrain.EFCore.API.Controllers
         }
 
         //átírva ide a Repository-ból:
-        [HttpGet("names")] //csak a név ami létszik a swagger UI-on
+        [HttpGet("names")] //csak a név ami látszik a swagger UI-on
         [ProducesResponseType(typeof(IEnumerable<GenreName>), StatusCodes.Status200OK)] //mivel trünk vissza
         public async Task<IActionResult> GetNames()
         {
