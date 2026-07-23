@@ -59,8 +59,7 @@ builder.Services.AddDbContext<MoviesContext>(optionsBuilder =>
     },
     //még két paramétert megadhatunk, az életciklust amit ajánlott Scoped-re állítani:
     ServiceLifetime.Scoped,
-    //a második a connectionString, változik e, mikor változik stb, ebben az esetben sosem fog változni: 
-    ServiceLifetime.Singleton);
+    ServiceLifetime.Singleton);//a második a connectionString, változik e, mikor változik stb, ebben az esetben sosem fog változni: 
 
 
 //DBContext lifetime-hoz használta ezt:
@@ -74,7 +73,7 @@ builder.Services.AddDbContextPool<MoviesContext>(optionsBuilder =>
     //.LogTo(Console.WriteLine); 
 };
 */
-    
+
 
 
 var app = builder.Build();
