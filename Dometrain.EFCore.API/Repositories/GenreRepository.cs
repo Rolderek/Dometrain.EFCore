@@ -26,8 +26,6 @@ namespace Dometrain.EFCore.API.Repositories
         Task<bool> Delete(int id);
     }
 
-
-
     public class GenreRepository : IGenreRepository
     {
         private readonly MoviesContext _context;
@@ -72,12 +70,20 @@ namespace Dometrain.EFCore.API.Repositories
 
         public async Task<IEnumerable<Genre>> GetAll() 
         {
-            throw new NotImplementedException();
+            var genres = await _context.Genres.ToListAsync();
+            return genres;
         }
 
-        public Task<Genre?> Update(int id, Genre genre)
+        public async Task<Genre?> Update(int id, Genre genre)
         {
-            throw new NotImplementedException();
+            var existingGenre = await _context.Genres.FindAsync(id);
+            if (existingGenre != null)
+            {
+                existingGenre.Name = genre.Name;
+                await _context.SaveChangesAsync();
+                return existingGenre;
+            }
+            return null;
         }
 
         public async Task<IEnumerable<Genre>> GetAllFromQuery() //még nincs meghívva a controllerben
@@ -90,9 +96,6 @@ namespace Dometrain.EFCore.API.Repositories
                 //ez a FromSql még összeköthető linkel is, szépen kombinálható
                 .Where(genre => genre.Name != "Comdey")
                 .ToListAsync();
-
-
-
             var genre2 = await _context.Genres.Where(g => g.Name != "Comedy" && g.Id >= minimumGenreId).ToListAsync();
 
             return genre2;
@@ -105,16 +108,13 @@ namespace Dometrain.EFCore.API.Repositories
             var names = await _context.Database
                 .SqlQuery<GenreName>($"SELECT Name From Genre")
                 .ToListAsync();
-
-           
             return names;
 
 
         }
 
-
-
     }
+
     //shadowproperty és queryfilter egyben, sajnos ez sincs bekötve:
     //logikai törlés
     public class GenreMappingVersionTwo : IEntityTypeConfiguration<Genre>

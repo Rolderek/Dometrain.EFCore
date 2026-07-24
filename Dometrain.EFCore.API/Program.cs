@@ -39,9 +39,9 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
-//
-builder.Services.AddScoped<IUnitOfWorkManager, UnitOfWorkManager>();  
-//builder.Services.AddTransient<Dometrain.EFCore.API.Repositories.GenreRepository>();
+
+builder.Services.AddScoped<IUnitOfWorkManager, UnitOfWorkManager>(); 
+builder.Services.AddTransient<Dometrain.EFCore.API.Repositories.GenreRepository>(); //repository regisztrálása
 
 // Add a DbContext here
 //builder.Services.AddDbContext<MoviesContext>(); //beregisztrálva
@@ -105,13 +105,15 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("AllowBlazor"); //CORS hiba elkerülése végett
 
 //szintén a blazoros megjelenítóhöz kell:
-app.UseCors("AllowBlazor"); //Cross-Origin Resource Sharing
-//app.MapGet("/test1", async (Dometrain.EFCore.API.Repositories.GenreRepository repo) =>
-//{
-//    return await repo.GetAllFromQuery();
-//});
+//app.UseCors("AllowBlazor"); //Cross-Origin Resource Sharing
+//--ez a repository GET-je--
+app.MapGet("/test1", async (Dometrain.EFCore.API.Repositories.GenreRepository repo) =>
+{
+    return await repo.GetAllFromQuery();
+});
 
 app.UseAuthorization();
 app.MapControllers();

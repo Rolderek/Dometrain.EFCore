@@ -272,7 +272,7 @@
 
     private async Task CreateMovie() //if - siker, else - nem sikerült, catch - exception
     {
-        try //API hiba, CORS hiba miatt is kell ez
+        try
         {
             CreateMessage = "Mentés folyamatban...";
             CreateMessageClass = "text-warning";//piros
@@ -284,7 +284,7 @@
                 CreateMessage = "A film sikeresen létrejött!";
                 CreateMessageClass = "text-success";//zöld
 
-                NewMovie = new Movie //swaggerből nézve, ha már ott máködött
+                NewMovie = new Movie //swaggerből nézve, ha már ott működött
                 {
                     Title = "",
                     ReleaseDate = DateTime.UtcNow,

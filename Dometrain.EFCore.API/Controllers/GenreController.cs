@@ -95,7 +95,7 @@ namespace Dometrain.EFCore.API.Controllers
             var genreNames = await _context.Genres
             .FromSql($"SELECT * FROM Genre WHERE Id >= {id}")
             .Where(genre => genre.Name != "Comedy")
-            .Select(genre => genre.Name) //csak a neveket adja vissza, szűrés
+            .Select(genre => genre.Name) 
             .ToListAsync();
 
              if (!genreNames.Any())

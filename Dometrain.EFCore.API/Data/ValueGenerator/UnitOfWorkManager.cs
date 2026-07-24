@@ -8,7 +8,7 @@
         Task<int> SaveChangesAsync();
     }
 
-    public class UnitOfWorkManager :IUnitOfWorkManager
+    public class UnitOfWorkManager : IUnitOfWorkManager
     {
         //ugyan azt a HTTP requestet hazsnáljuk a program futása során
         private readonly MoviesContext _context;
@@ -24,7 +24,7 @@
             _isUnitOfWorkStarted = true;   
         }
 
-        public bool IsUnitOfWorkStarted => _isUnitOfWorkStarted;
+        public bool IsUnitOfWorkStarted => _isUnitOfWorkStarted; //mindenkinke aki lekéri visszaadja az értéket egyszerűen
 
         public async Task<int> SaveChangesAsync()
         {
@@ -32,6 +32,4 @@
         }
 
     }
-
-    //ezt az osztályt hazsnálhatnánk a GenreRepository-hoz ha lenne ilyenünk mint a példában
 }
